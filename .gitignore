@@ -8,6 +8,9 @@
 *.so
 *.dylib
 
+rancher-kev2-provisioning-tests
+checker
+
 # Test binary, built with `go test -c`
 *.test
 
