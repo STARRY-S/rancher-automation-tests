@@ -1,0 +1,131 @@
+name: Provisioning Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      RPM_VERSION:
+        description: 'Rancher Version (v2.10.0-ent-rcX)'
+        default: 'v2.10.0-ent-rc1'
+        required: true
+      K3S_VERSION:
+        description: 'K3s version for Rancher Local Cluster'
+        default: 'v1.31.2+k3s1'
+        required: true
+      RPM_LOCAL_NAME:
+        description: 'Rancher local cluster name, for run multiple tests'
+        default: 'starry-1'
+      TEST_CASE:
+        description: "Test case to run, separated by white spaces (aws/k3s-openeuler-aws aliyun/k3s-ubuntu-aliyun)"
+        required: false
+        default: 'awscn/test-awscn'
+      RANCHER_CLUSTERS:
+        description: 'Downstream cluster versions, separated by white spaces (v1.24.11+k3s1 v1.24.11+rke2r1)'
+        required: true
+        default: 'v1.31.2+rke2r1 v1.31.2+k3s1 v1.31.2-rancher2-1'
+      TEST_CODE_REPO:
+        description: 'GitHub Repo for clone provisioning test code'
+        required: true
+        default: 'github.com/STARRY-S/pandaria-tests'
+      TEST_CODE_BRANCH:
+        description: 'GitHub Branch for clone provisioning test code'
+        required: true
+        default: 'release/v2.10'
+      ENVS:
+        description: 'Pass other envs for tests (ENV1=AAA ENV2=BBB)'
+        required: false
+        default: 'SYSTEM_DEFAULT_REGISTRY=registry.rancher.cn ARM64_ONLY=1'
+
+env:
+  # ENV defined by workflow dispatch inputs
+  RPM_VERSION: ${{ github.event.inputs.RPM_VERSION }}
+  K3S_VERSION: ${{ github.event.inputs.K3S_VERSION }}
+  TEST_CASE: ${{ github.event.inputs.TEST_CASE }}
+  RANCHER_CLUSTERS: ${{ github.event.inputs.RANCHER_CLUSTERS }}
+  INPUT_ENVS: ${{ github.event.inputs.ENVS }}
+
+  # ENV from secrets
+  ADMIN_PWD: ${{ secrets.ADMIN_PWD }}
+  SSH_KEY_PAIR: ${{ secrets.SSH_KEY_PAIR }}
+  SSH_KEY: ${{ secrets.SSH_KEY }} # SSH secret key
+  HUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  HUB_PASS: ${{ secrets.DOCKERHUB_PASSWORD }}
+  TEST_CODE_OAUTH_TOKEN: ${{ secrets.TEST_CODE_OAUTH_TOKEN}}  # READ ONLY token for access personal test code private repo.
+  GITHUB_OAUTH_TOKEN: ${{ secrets.ORG_OAUTH_TOKEN }} # READ ONLY token for access cnrancher org private repo.
+
+  # AWS (Global)
+  AWS_AK: ${{ secrets.AWS_AK }}
+  AWS_SK: ${{ secrets.AWS_SK }}
+
+  # AWSCN (China)
+  AWSCN_AK: ${{ secrets.AWSCN_AK }}
+  AWSCN_SK: ${{ secrets.AWSCN_SK }}
+
+  # Aliyun
+  ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+  ALIYUN_SECRET_ACCESS_KEY: ${{ secrets.ALIYUN_SECRET_ACCESS_KEY }}
+
+  # HWCloud
+  HUAWEI_ACCESS_KEY: ${{ secrets.HUAWEI_ACCESS_KEY }}
+  HUAWEI_SECRET_KEY: ${{ secrets.HUAWEI_SECRET_KEY }}
+  HUAWEI_PROJECT_ID: ${{ secrets.HUAWEI_PROJECT_ID }}
+  HUAWEI_REGION_ID: ${{ secrets.HUAWEI_REGION_ID }}
+
+  # Tencent cloud
+  TENCENT_ACCESS_KEY_ID: ${{ secrets.TENCENT_ACCESS_KEY_ID }}
+  TENCENT_ACCESS_KEY_SECRET: ${{ secrets.TENCENT_ACCESS_KEY_SECRET }}
+  TENCENT_SSH_KEY: ${{ secrets.TENCENT_SSH_KEY }}
+  TENCENT_SSH_KEY_ID: ${{ secrets.TENCENT_SSH_KEY_ID }}
+
+jobs:
+  provisioning-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Setup Environment
+        run: |
+          set -euxo pipefail
+
+          # Setup INPUT_ENVS
+          array=($INPUT_ENVS)
+          for i in "${array[@]}"
+          do
+            echo $i >> "$GITHUB_ENV"
+            echo "Export ENV: $i"
+          done
+
+          # Clone test code scripts repo
+          REPO="https://${TEST_CODE_OAUTH_TOKEN}@${{ github.event.inputs.TEST_CODE_REPO }}"
+          git clone --depth=1 --branch ${{ github.event.inputs.TEST_CODE_BRANCH }} $REPO ./src
+
+          # Prepare ssh private key
+          touch src/tests/provisioning/$SSH_KEY_PAIR
+          cat > "src/tests/provisioning/$SSH_KEY_PAIR" << EOT
+          $SSH_KEY
+          EOT
+          chmod 600 src/tests/provisioning/$SSH_KEY_PAIR
+      - name: 'Run provisioning tests'
+        run: |
+          echo "Run provisioning tests"
+          scripts/run.sh
+      - name: 'Cleanup'
+        run: |
+          rm -r ~/.ssh/ || true
+          rm -rf ./src/ || true
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.x
+      - name: Check resource cleanup
+        run : |
+          # Build checker cli
+          ./scripts/build.sh
+
+          # Check cloud resource cleanup
+          ./checker
