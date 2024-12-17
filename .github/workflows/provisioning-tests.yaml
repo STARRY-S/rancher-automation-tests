@@ -30,27 +30,38 @@ on:
         description: 'GitHub Branch for clone provisioning test code'
         required: true
         default: 'release/v2.10'
+      RANCHER_CODE_REPO:
+        description: 'GitHub Repo of rancher'
+        required: true
+        default: "github.com/cnrancher/pandaria"
       ENVS:
-        description: 'Pass other envs for tests (ENV1=AAA ENV2=BBB)'
+        description: 'Other envs for tests, separated by white spaces (ENV1=AAA ENV2=BBB)'
         required: false
-        default: 'SYSTEM_DEFAULT_REGISTRY=registry.rancher.cn ARM64_ONLY=1'
+        default: 'SYSTEM_DEFAULT_REGISTRY=docker.hxstarrys.me ARM64_ONLY=1'
 
 env:
+  # Pre-define environment variables
+  CATTLE_MACHINE_VERSION: v0.15.0-rancher116
+  AUTOK3S_VERSION: v0.9.3
+
   # ENV defined by workflow dispatch inputs
   RPM_VERSION: ${{ github.event.inputs.RPM_VERSION }}
   K3S_VERSION: ${{ github.event.inputs.K3S_VERSION }}
   TEST_CASE: ${{ github.event.inputs.TEST_CASE }}
   RANCHER_CLUSTERS: ${{ github.event.inputs.RANCHER_CLUSTERS }}
+  TEST_CODE_REPO: ${{ github.event.inputs.TEST_CODE_REPO }}
+  TEST_CODE_BRANCH: ${{ github.event.inputs.TEST_CODE_BRANCH }}
+  RANCHER_CODE_REPO: ${{ github.event.inputs.RANCHER_CODE_REPO }}
   INPUT_ENVS: ${{ github.event.inputs.ENVS }}
 
   # ENV from secrets
-  ADMIN_PWD: ${{ secrets.ADMIN_PWD }}
-  SSH_KEY_PAIR: ${{ secrets.SSH_KEY_PAIR }}
-  SSH_KEY: ${{ secrets.SSH_KEY }} # SSH secret key
-  HUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-  HUB_PASS: ${{ secrets.DOCKERHUB_PASSWORD }}
-  TEST_CODE_OAUTH_TOKEN: ${{ secrets.TEST_CODE_OAUTH_TOKEN}}  # READ ONLY token for access personal test code private repo.
-  GITHUB_OAUTH_TOKEN: ${{ secrets.ORG_OAUTH_TOKEN }} # READ ONLY token for access cnrancher org private repo.
+  ADMIN_PWD: ${{ secrets.ADMIN_PWD }}       # Rancher password
+  SSH_KEY_PAIR: ${{ secrets.SSH_KEY_PAIR }} # SSH secret key PEM
+  SSH_KEY: ${{ secrets.SSH_KEY }}           # SSH secret key filename
+  HUB_USER: ${{ secrets.DOCKERHUB_USERNAME }} # Dockerhub username
+  HUB_PASS: ${{ secrets.DOCKERHUB_PASSWORD }} # Dockerhub password
+  TEST_REPO_OAUTH_TOKEN: ${{ secrets.TEST_REPO_OAUTH_TOKEN}}        # READ ONLY token for access provisioning test repo.
+  RANCHER_REPO_OAUTH_TOKEN: ${{ secrets.RANCHER_REPO_OAUTH_TOKEN }} # READ ONLY token for access rancher source code repo.
 
   # AWS (Global)
   AWS_AK: ${{ secrets.AWS_AK }}
@@ -88,40 +99,20 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Setup Environment
-        run: |
-          set -euxo pipefail
-
-          # Setup INPUT_ENVS
-          array=($INPUT_ENVS)
-          for i in "${array[@]}"
-          do
-            echo $i >> "$GITHUB_ENV"
-            echo "Export ENV: $i"
-          done
-
-          # Clone test code scripts repo
-          REPO="https://${TEST_CODE_OAUTH_TOKEN}@${{ github.event.inputs.TEST_CODE_REPO }}"
-          git clone --depth=1 --branch ${{ github.event.inputs.TEST_CODE_BRANCH }} $REPO ./src
-
-          # Prepare ssh private key
-          touch src/tests/provisioning/$SSH_KEY_PAIR
-          cat > "src/tests/provisioning/$SSH_KEY_PAIR" << EOT
-          $SSH_KEY
-          EOT
-          chmod 600 src/tests/provisioning/$SSH_KEY_PAIR
-      - name: 'Run provisioning tests'
-        run: |
-          echo "Run provisioning tests"
-          scripts/run.sh
-      - name: 'Cleanup'
-        run: |
-          rm -r ~/.ssh/ || true
-          rm -rf ./src/ || true
       - name: Install Go
         uses: actions/setup-go@v5
         with:
           go-version: 1.23.x
+      - name: Setup Test Environment
+        run: |
+          scripts/ci/setup.sh
+      - name: 'Run provisioning tests'
+        run: |
+          echo "Run provisioning tests"
+          scripts/ci/run.sh
+      - name: 'Cleanup'
+        run: |
+          scripts/ci/clean.sh
       - name: Check resource cleanup
         run : |
           # Build checker cli
