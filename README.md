@@ -1,8 +1,14 @@
-# Rancher Prime GC KEv2 provisioning tests
+## Rancher Prime GC Automation Tests
 
-Automate Rancher Prime GC KEv2 provisioning tests on GitHub Actions.
+[![Build](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/ci.yaml/badge.svg)](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/ci.yaml)
+[![Provisioning Tests](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/provisioning-tests.yaml/badge.svg)](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/provisioning-tests.yaml)
 
-## Checker
+Automate Rancher Prime GC automation tests on GitHub Actions.
+
+- KEv2 provisioning tests
+- Rancher FlatNetwork Validation tests
+
+### Public Cloud Resource Checker
 
 A simple command line CLI to check if the public cloud resource is cleaned up.
 
@@ -25,7 +31,7 @@ Available Commands:
 ......
 ```
 
-## LICENSE
+### LICENSE
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
