@@ -1,6 +1,9 @@
 package commands
 
 import (
+	"os"
+
+	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/provider"
 	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -28,7 +31,7 @@ func newCheckerCmd() *checkerCmd {
 	cc := &checkerCmd{}
 	cc.baseCmd = newBaseCmd(&cobra.Command{
 		Use:   "checker",
-		Short: "Rancher KEv2 Provisioning test resource checker tools",
+		Short: "Public cloud remain resource check CLI",
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Help()
 		},
@@ -55,4 +58,23 @@ func (cc *checkerCmd) addCommands() {
 		newHwcloudCmd(),
 		newVersionCmd(),
 	)
+}
+
+// checkEnv will raise fatal error if both ENV and command options were not provided.
+func checkEnv(p *string, key string) {
+	if *p == "" {
+		*p, _ = os.LookupEnv(key)
+		if *p == "" {
+			logrus.Fatalf("%v not set", key)
+		}
+	}
+}
+
+// run executes providers.Run()
+func run(ps provider.Providers) error {
+	if err := ps.Run(signalContext); err != nil {
+		return err
+	}
+	logrus.Infof("Done")
+	return nil
 }

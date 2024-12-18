@@ -45,7 +45,7 @@ git clone --depth=1 --single-branch --branch ${TEST_CODE_BRANCH} $TEST_REPO $TES
 # Prepare ssh private key
 touch ${TEST_SOURCE}/tests/provisioning/$SSH_KEY
 cat > "${TEST_SOURCE}/tests/provisioning/$SSH_KEY" << EOT
-$SSH_KEY_PAIR
+$SSH_SECRET_KEY
 EOT
 chmod 600 ${TEST_SOURCE}/tests/provisioning/$SSH_KEY
 cp ${TEST_SOURCE}/tests/provisioning/$SSH_KEY /opt/config/autok3s/$SSH_KEY

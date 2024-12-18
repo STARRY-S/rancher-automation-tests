@@ -2,6 +2,29 @@
 
 Automate Rancher Prime GC KEv2 provisioning tests on GitHub Actions.
 
+## Checker
+
+A simple command line CLI to check if the public cloud resource is cleaned up.
+
+```console
+$ go build -o checker .
+$ ./checker -h
+Public cloud remain resource check CLI
+
+Usage:
+  checker [flags]
+  checker [command]
+
+Available Commands:
+  aws         Check AWS (Global) resources
+  awscn       Check AWS (China) resources
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  hwcloud     Check Huawei Cloud resources
+  version     
+......
+```
+
 ## LICENSE
 
 Licensed under the Apache License, Version 2.0 (the "License");
