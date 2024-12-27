@@ -16,6 +16,8 @@ const (
 type hwcloudCmd struct {
 	*baseCmd
 
+	clean     bool
+	filter    string
 	ak        string
 	sk        string
 	region    string
@@ -39,6 +41,8 @@ func newHwcloudCmd() *hwcloudCmd {
 	})
 
 	flags := cc.baseCmd.cmd.Flags()
+	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
+	flags.StringVarP(&cc.filter, "filter", "f", "", "filter string for mating instance name (Ex. auto-rancher-automation-)")
 	flags.StringVarP(&cc.ak, "ak", "", "", "huawei cloud access key ID (env '"+ENV_HUAWEI_ACCESS_KEY+"')")
 	flags.StringVarP(&cc.sk, "sk", "", "", "huawei cloud secret key (env '"+ENV_HUAWEI_SECRET_KEY+"')")
 	flags.StringVarP(&cc.region, "region", "r", "", "huawei cloud region (env '"+ENV_HUAWEI_REGION_ID+"')")

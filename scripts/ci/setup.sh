@@ -48,7 +48,7 @@ cat > ${RANCHER_SOURCE}/tests/v2/validation/provisioning/config_panda_base << EO
 rancher:
   host: "$RANCHER_SERVER_URL"
   adminToken: "$RANCHER_SERVER_TOKEN"
-  cleanup: true
+  cleanup: false
   insecure: true
 EOT
 

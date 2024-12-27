@@ -68,8 +68,10 @@ huaweiECSConfigs:
 EOF
 
 cd ${CONFIG_DIR}
-    export CATTLE_TEST_CONFIG=${CONFIG_FILE}
-    gotestsum --format standard-verbose \
-        --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/k3s \
-        --junitfile huaweicloud-k3s-results.xml -- -timeout=60m -tags=validation -v \
-        -run "TestCustomClusterK3SProvisioningTestSuite/TestProvisioningK3SCustomClusterDynamicInputStandardUser"
+export CATTLE_TEST_CONFIG=${CONFIG_FILE}
+
+set -x
+gotestsum --format standard-verbose \
+    --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/k3s \
+    --junitfile huaweicloud-k3s-results.xml -- -timeout=60m -tags=validation -v \
+    -run "TestCustomClusterK3SProvisioningTestSuite/TestProvisioningK3SCustomClusterDynamicInputStandardUser"

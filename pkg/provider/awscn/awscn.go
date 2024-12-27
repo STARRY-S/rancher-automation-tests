@@ -7,6 +7,8 @@ import (
 )
 
 type provider struct {
+	filter string
+	clean  bool
 }
 
 func (p *provider) Check(ctx context.Context) error {
@@ -16,7 +18,8 @@ func (p *provider) Check(ctx context.Context) error {
 }
 
 type Options struct {
-	Regex string
+	Filter string
+	Clean  bool
 
 	AccessKey string
 	SecretKey string
@@ -25,5 +28,8 @@ type Options struct {
 }
 
 func NewProvider(o *Options) (*provider, error) {
-	return &provider{}, nil
+	return &provider{
+		filter: o.Filter,
+		clean:  o.Clean,
+	}, nil
 }

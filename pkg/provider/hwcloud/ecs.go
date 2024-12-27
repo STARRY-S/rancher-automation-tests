@@ -1,6 +1,7 @@
 package hwcloud
 
 import (
+	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/config"
 	ecs "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/ecs/v2"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/ecs/v2/model"
@@ -28,6 +29,25 @@ func listCloudServers(client *ecs.EcsClient) (*model.ListCloudServersResponse, e
 	res, err := client.ListCloudServers(&model.ListCloudServersRequest{})
 	if err != nil {
 		logrus.Errorf("ListCloudServers failed: %v", err)
+		return nil, err
+	}
+	return res, nil
+}
+
+func deleteServer(client *ecs.EcsClient, id string) (*model.DeleteServersResponse, error) {
+	res, err := client.DeleteServers(&model.DeleteServersRequest{
+		Body: &model.DeleteServersRequestBody{
+			DeletePublicip: utils.Pointer(true),
+			DeleteVolume:   utils.Pointer(true),
+			Servers: []model.ServerId{
+				{
+					Id: id,
+				},
+			},
+		},
+	})
+	if err != nil {
+		logrus.Errorf("DeleteServers failed: %v", err)
 		return nil, err
 	}
 	return res, nil

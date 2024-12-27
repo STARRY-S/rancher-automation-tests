@@ -3,6 +3,7 @@ package hwcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	cce "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/cce/v3"
@@ -12,6 +13,9 @@ import (
 )
 
 type provider struct {
+	filter string
+	clean  bool
+
 	clientAuth *ClientAuth
 	cceClient  *cce.CceClient
 	ecsCliet   *ecs.EcsClient
@@ -50,10 +54,24 @@ func (p *provider) checkCCE(ctx context.Context) error {
 			continue
 		}
 
+		if p.filter != "" {
+			if strings.Index(c.Metadata.Name, p.filter) < 0 {
+				// skip filter not match
+				continue
+			}
+		}
+
 		// Check cluster name, AliasName, tag
 		logrus.WithFields(logrus.Fields{"Provider": "HWCloud"}).
 			Warnf("CCE cluster [%v] status [%v] not cleanup!",
 				utils.Value(c.Metadata.Alias), utils.Value(c.Status.Phase))
+
+		if p.clean {
+			if _, err := deleteCluster(p.cceClient, utils.Value(c.Metadata.Uid)); err != nil {
+				logrus.Errorf("failed to delete CCE cluster %v: %v", c.Metadata.Name, err)
+				return fmt.Errorf("failed to delete hwcloud cce cluster: %w", err)
+			}
+		}
 	}
 
 	return nil
@@ -76,10 +94,23 @@ func (p *provider) checkECS(ctx context.Context) error {
 			continue
 		}
 
+		if p.filter != "" {
+			if strings.Index(c.Name, p.filter) < 0 {
+				// skip filter not match
+				continue
+			}
+		}
+
 		// Check server name, tag
 		logrus.WithFields(logrus.Fields{"Provider": "HWCloud"}).
 			Warnf("ECS Server [%v] status [%v] flavor [%v] not cleanup!",
 				c.Name, c.Status, c.Flavor)
+		if p.clean {
+			if _, err := deleteServer(p.ecsCliet, c.Id); err != nil {
+				logrus.Errorf("failed to delete server %v: %v", c.Name, err)
+				return fmt.Errorf("failed to delete hwcloud ECS server: %w", err)
+			}
+		}
 	}
 	return nil
 }
@@ -112,7 +143,8 @@ func (p *provider) checkEIP(ctx context.Context) error {
 }
 
 type Options struct {
-	Regex string
+	Filter string
+	Clean  bool
 
 	AccessKey string
 	SecretKey string
@@ -139,6 +171,9 @@ func NewProvider(o *Options) (*provider, error) {
 		return nil, fmt.Errorf("failed to init hwcloud eip client: %w", err)
 	}
 	return &provider{
+		filter: o.Filter,
+		clean:  o.Clean,
+
 		clientAuth: c,
 		cceClient:  cceClient,
 		ecsCliet:   ecsClient,

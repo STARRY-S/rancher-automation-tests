@@ -40,6 +40,7 @@ CONFIG_FILE_ARM64=${CONFIG_DIR}/config_panda_arm64
 cat ${CONFIG_FILE} > ${CONFIG_FILE_ARM64}
 cat ../../awscn/ubuntu-arm64 >> ${CONFIG_FILE_ARM64}
 
+set -x
 cd ${CONFIG_DIR}
 if [ -z "${ARM64_ONLY}" ]; then
     CATTLE_TEST_CONFIG=${CONFIG_FILE_AMD64} gotestsum --format standard-verbose \

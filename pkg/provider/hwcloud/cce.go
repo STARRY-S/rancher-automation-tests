@@ -30,3 +30,14 @@ func listClusters(client *cce.CceClient) (*model.ListClustersResponse, error) {
 	}
 	return res, nil
 }
+
+func deleteCluster(client *cce.CceClient, id string) (*model.DeleteClusterResponse, error) {
+	res, err := client.DeleteCluster(&model.DeleteClusterRequest{
+		ClusterId: id,
+	})
+	if err != nil {
+		logrus.Errorf("DeleteCluster failed: %v", err)
+		return nil, err
+	}
+	return res, nil
+}

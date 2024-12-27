@@ -9,7 +9,10 @@ echo "Start run provisioning tests."
 failed=""
 for CASE in ${TEST_CASE[@]}; do
     echo "Running provisioning case ${CASE}"
-    ./${CASE} || failed=1
+    ./${CASE} || {
+        failed=1
+        true
+    }
 done
 
 if [[ ! -z "$failed" ]]; then

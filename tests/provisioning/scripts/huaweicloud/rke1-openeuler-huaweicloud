@@ -71,7 +71,9 @@ huaweiECSConfigs:
 EOF
 
 cd ${CONFIG_DIR}
-    CATTLE_TEST_CONFIG=${CONFIG_FILE} gotestsum --format standard-verbose \
-        --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/rke1 \
-        --junitfile huaweicloud-rke1-results.xml -- -timeout=60m -tags=validation -v \
-        -run "TestCustomClusterRKE1ProvisioningTestSuite/TestProvisioningRKE1CustomClusterDynamicInputStandardUser"
+set -x
+
+CATTLE_TEST_CONFIG=${CONFIG_FILE} gotestsum --format standard-verbose \
+    --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/rke1 \
+    --junitfile huaweicloud-rke1-results.xml -- -timeout=60m -tags=validation -v \
+    -run "TestCustomClusterRKE1ProvisioningTestSuite/TestProvisioningRKE1CustomClusterDynamicInputStandardUser"
