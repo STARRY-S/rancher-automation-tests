@@ -1,0 +1,18 @@
+
+awsMachineConfigs:
+  region: "cn-northwest-1"
+  awsMachineConfig:
+    - ami: "ami-0448817ee466d7ba1"
+      instanceType: "c6g.large"
+      sshUser: "ubuntu"
+      vpcId: "vpc-04102d93beaeae434"
+      volumeType: "gp3"
+      zone: "c"
+      retries: "5"
+      rootSize: "20"
+      requestSpotInstance: true
+      securityGroup: ["rancher-nodes"]
+      roles:
+        - "etcd"
+        - "controlplane"
+        - "worker"

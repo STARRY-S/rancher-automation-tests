@@ -6,10 +6,9 @@ set -euo pipefail
 
 cd $(dirname $0)/../../
 
-cd ${TEST_SOURCE}/tests/provisioning/
-echo Run test case: $TEST_CASE
+cd tests/provisioning/
+echo "Run test case: [$TEST_CASE]"
 echo "Current dir: $(pwd)"
-
-./scripts/test-provisioning
+./scripts/test-provisioning.sh
 
 echo Provisioning test: DONE

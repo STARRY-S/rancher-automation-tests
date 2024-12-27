@@ -1,0 +1,72 @@
+#!/bin/bash
+
+source $(dirname $0)/../version
+if [ -z "${RKE1_VERSIONS}" ]; then
+    exit 0
+fi
+if [ -z "${AWSCN_AK}" ]; then
+    exit 0
+fi
+
+cd $(dirname $0)
+
+source ../../awscn/ubuntu-rke1
+
+rm -f ${RANCHER_SOURCE}/tests/v2/validation/provisioning/rke1/config_panda_*
+
+CONFIG_DIR=${RANCHER_SOURCE}/tests/v2/validation/provisioning/rke1/
+CONFIG_FILE=${CONFIG_DIR}/config_panda
+
+for RKE1_VERSION in ${RKE1_VERSIONS[@]}; do
+    echo "try to provision ${RKE1_VERSION}"
+    cat ${RANCHER_SOURCE}/tests/v2/validation/provisioning/config_panda_base > ${CONFIG_FILE}
+
+    cat << EOF >> ${CONFIG_FILE}
+
+provisioningInput:
+  nodePools:
+    - nodeRoles:
+        etcd: true
+        controlplane: true
+        worker: true
+        quantity: 1
+      specifyPrivateIP: true
+  rke1KubernetesVersion: [${RKE1_VERSION}]
+  cni: ["canal"]
+  nodeProviders: ["config"]
+  psact: ""
+
+EOF
+
+    CONFIG_FILE_AMD64=${CONFIG_DIR}/config_panda_amd64
+    cat ${CONFIG_FILE} > ${CONFIG_FILE_AMD64}
+
+    CONFIG_FILE_ARM64=${CONFIG_DIR}/config_panda_arm64
+    cat ${CONFIG_FILE} > ${CONFIG_FILE_ARM64}
+
+    pushd ${CONFIG_DIR}
+    if [ -z "${ARM64_ONLY}" ]; then
+        create_ec2_amd64 ${RKE1_VERSION}
+        generate_config ${RKE1_VERSION}
+        cat ${RKE1_EXTERNAL_NODES_CONFIG} >> ${CONFIG_FILE_AMD64}
+        sleep 180 # Wait for docker installed
+        CATTLE_TEST_CONFIG=${CONFIG_FILE_AMD64} gotestsum --format standard-verbose \
+            --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/rke1 \
+            --junitfile awscn-rke1-amd64-results.xml -- -timeout=60m -tags=validation -v \
+            -run "TestCustomClusterRKE1ProvisioningTestSuite/TestProvisioningRKE1CustomClusterDynamicInputStandardUser"
+        destroy_ec2 ${RKE1_VERSION}
+    fi
+    if [ -z "${AMD64_ONLY}" ]; then
+        create_ec2_arm64 ${RKE1_VERSION}
+        generate_config ${RKE1_VERSION}
+        sleep 180 # Wait for docker installed
+        cat ${RKE1_EXTERNAL_NODES_CONFIG} >> ${CONFIG_FILE_ARM64}
+        CATTLE_TEST_CONFIG=${CONFIG_FILE_ARM64} gotestsum --format standard-verbose \
+            --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/rke1 \
+            --junitfile awscn-rke1-arm64-results.xml -- -timeout=60m -tags=validation -v \
+            -run "TestCustomClusterRKE1ProvisioningTestSuite/TestProvisioningRKE1CustomClusterDynamicInputStandardUser"
+        destroy_ec2 ${RKE1_VERSION}
+    fi
+    popd
+    echo "done to provision ${RKE1_VERSION}"
+done

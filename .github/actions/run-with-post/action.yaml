@@ -1,0 +1,14 @@
+name: "Run with post"
+description: "Run scripts with post actions."
+inputs:
+  RUN:
+    description: "Script to run"
+    required: true
+  POST:
+    description: "Script to post"
+    required: true
+
+runs:
+  using: "node20"
+  main: "main.js"
+  post: "main.js"

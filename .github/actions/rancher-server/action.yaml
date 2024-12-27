@@ -1,0 +1,73 @@
+name: "Launch Rancher AutoK3s"
+description: "Launch Rancher by AutoK3s on specific cloud provider"
+inputs:
+  K3S_VERSION:
+    description: "K3s cluster version"
+    default: "v1.29.11+k3s1"
+    required: true
+  SSH_KEY_NAME:
+    description: "SSH Key filename"
+    default: ""
+    required: true
+  SSH_SECRET_KEY:
+    description: "SSH secret PEM"
+    default: ""
+    required: true
+  RPM_LOCAL_NAME:
+    description: "Rancher Prime Local cluster server name"
+    default: "local-1"
+    required: true
+  AUTOK3S_VERSION:
+    description: "AutoK3s Version"
+    default: "v0.9.3"
+    required: true
+  AUTOK3S_PROVIDER:
+    description: "AutoK3s provider (aws/tencent/alibaba)"
+    default: "aws"
+    required: true
+  AUTOK3S_SSH_USER:
+    description: "AutoK3s SSH username (openeuler/ubuntu/etc..)"
+    default: "openeuler"
+    required: true
+  AUTOK3S_AMI:
+    description: "OS image ID (ami-xxx)"
+    default: ""
+    required: true
+  AUTOK3S_INSTANCE_TYPE:
+    description: "VM instance type (Ex. c6.xlarge)"
+    required: true
+  AUTOK3S_REGION:
+    description: "region ID (Ex. ca-central-1a)"
+    required: true
+  AUTOK3S_ZONE:
+    description: "region ZONE ID"
+    required: false
+  AUTOK3S_SECURITY_GROUP:
+    description: "security group"
+    required: true
+  AUTOK3S_VOLUME_TYPE:
+    description: "volume type"
+    required: true
+  AUTOK3S_VPC:
+    description: "VPC ID"
+    required: true
+  AUTOK3S_SUBNET:
+    description: "Subnet ID"
+    required: true
+  DOCKERHUB_USERNAME:
+    description: "Username for pull prime image from DockerHub"
+    required: false
+  DOCKERHUB_PASSWORD:
+    description: "Password for pull prime image from DockerHub"
+    required: false
+  PRIME_REGISTRY_USERNAME:
+    description: "Username for pull prime image from PrimeRegistry"
+    required: false
+  PRIME_REGISTRY_PASSWORD:
+    description: "Password for pull prime image from PrimeRegistry"
+    required: false
+
+runs:
+  using: "node20"
+  main: "main.js"
+  post: "main.js"

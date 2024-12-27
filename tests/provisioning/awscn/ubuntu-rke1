@@ -1,0 +1,100 @@
+#!/bin/bash
+
+cat << EOF > /tmp/userdata
+#!/bin/bash
+echo "Install docker to Ubuntu"
+EOF
+cat << \EOF > /tmp/install-docker.sh
+#!/bin/bash
+# Using mirrors.tuna.tsinghua.edu.cn repository mirror.
+apt-get update
+apt-get -y install ca-certificates curl gnupg
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get update
+apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+systemctl enable --now docker
+usermod -aG docker ubuntu
+EOF
+
+mkdir -p ~/.ssh
+
+export AWS_ACCESS_KEY_ID=${AWSCN_AK}
+export AWS_SECRET_ACCESS_KEY=${AWSCN_SK}
+
+RKE1_TEST_NODES="oetest-1"
+RKE1_EXTERNAL_NODES_CONFIG="/tmp/external_nodes"
+
+function create_ec2_amd64() {
+    for node in ${RKE1_TEST_NODES}; do
+        rancher-machine create \
+            --driver amazonec2 \
+            --amazonec2-region cn-northwest-1 \
+            --amazonec2-vpc-id vpc-04102d93beaeae434 \
+            --amazonec2-zone c \
+            --amazonec2-ami ami-06f2846ff1f5bce35 \
+            --amazonec2-instance-type c5a.xlarge \
+            --amazonec2-ssh-user ubuntu \
+            --amazonec2-volume-type gp3 \
+            --amazonec2-root-size 30 \
+            --amazonec2-security-group rancher-nodes \
+            --amazonec2-userdata /tmp/userdata \
+            --custom-install-script /tmp/install-docker.sh \
+            --amazonec2-request-spot-instance \
+            ${node}-$1
+
+        rm -f ~/.ssh/${node}-$1
+        ln -s ~/.docker/machine/machines/${node}-$1/id_rsa ~/.ssh/${node}-$1
+    done
+}
+
+function create_ec2_arm64() {
+    for node in ${RKE1_TEST_NODES}; do
+        rancher-machine create \
+            --driver amazonec2 \
+            --amazonec2-region cn-northwest-1 \
+            --amazonec2-vpc-id vpc-04102d93beaeae434 \
+            --amazonec2-zone c \
+            --amazonec2-ami ami-0448817ee466d7ba1 \
+            --amazonec2-instance-type c6g.xlarge \
+            --amazonec2-ssh-user ubuntu \
+            --amazonec2-volume-type gp3 \
+            --amazonec2-root-size 30 \
+            --amazonec2-security-group rancher-nodes \
+            --amazonec2-userdata /tmp/userdata \
+            --custom-install-script /tmp/install-docker.sh \
+            --amazonec2-request-spot-instance \
+            ${node}-$1
+
+        rm -f ~/.ssh/${node}-$1
+        ln -s ~/.docker/machine/machines/${node}-$1/id_rsa ~/.ssh/${node}-$1
+    done
+}
+
+function generate_config() {
+    local ip_1=$(jq '.Driver.IPAddress' ~/.docker/machine/machines/oetest-1-*/config.json)
+    local ip_1_p=$(jq '.Driver.PrivateIPAddress' ~/.docker/machine/machines/oetest-1-*/config.json)
+    cat << EOF > ${RKE1_EXTERNAL_NODES_CONFIG}
+externalNodes:
+  nodes:
+    -1:
+      - nodeID: "oetest-1"
+        publicIPAddress: $ip_1
+        privateIPAddress: $ip_1_p
+        sshUser: "ubuntu"
+        sshKeyName: "oetest-1-$1"
+EOF
+}
+
+function destroy_ec2() {
+    for node in ${RKE1_TEST_NODES}; do
+        rancher-machine rm -f ${node}-$1
+        rm -f ~/.ssh/${node}-$1
+    done
+    rm -f ${RKE1_EXTERNAL_NODES_CONFIG}
+}

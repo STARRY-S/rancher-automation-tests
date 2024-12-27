@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#RANCHER_CLUSTERS="v1.21.6+rke2r1 v1.23.6+rke2r1 v1.24.4+k3s1 v1.24.2-rancher1-1 v1.26.2-rancher1-1 v1.25.6-rancher1-1"
+#RANCHER_CLUSTERS="v1.24.4+k3s1 v1.24.10+k3s1"
+#RANCHER_CLUSTERS="v1.25.6-rancherent4-1-1 v1.24.10-rancherent4-1-1 v1.23.16-rancherent2-1-1"
+#RANCHER_CLUSTERS="v1.25.7+rke2r1 v1.24.11+rke2r1 v1.23.17+rke2r1"
+#RANCHER_CLUSTERS="v1.25.7+k3s1 v1.24.11+k3s1 v1.23.17+k3s1"
+
+for version in ${RANCHER_CLUSTERS[@]}; do
+    if [[ "${version}" == *"rancher"* ]]; then
+        RKE1_VERSIONS=(${RKE1_VERSIONS[*]} ${version})
+    fi
+
+    if [[ "${version}" == *"rke2"* ]]; then
+        RKE2_VERSIONS=(${RKE2_VERSIONS[*]} ${version})
+    fi
+
+    if [[ "${version}" == *"k3s"* ]]; then
+        K3S_VERSIONS=(${K3S_VERSIONS[*]} ${version})
+    fi
+done
+
+if [ -n "${K3S_VERSIONS}" ]; then
+    K3S_VERSIONS=$(IFS=, ; echo "${K3S_VERSIONS[*]}")
+fi
+
+if [ -n "${RKE2_VERSIONS}" ]; then
+    RKE2_VERSIONS=$(IFS=, ; echo "${RKE2_VERSIONS[*]}")
+fi

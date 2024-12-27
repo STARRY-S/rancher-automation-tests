@@ -1,0 +1,55 @@
+#!/bin/bash
+
+source $(dirname $0)/../version
+if [ -z "${RKE2_VERSIONS}" ]; then
+    exit 0
+fi
+if [ -z "${AWSCN_AK}" ]; then
+    exit 0
+fi
+
+cd $(dirname $0)
+
+rm -f ${RANCHER_SOURCE}/tests/v2/validation/provisioning/rke2/config_panda_*
+
+CONFIG_DIR=${RANCHER_SOURCE}/tests/v2/validation/provisioning/rke2/
+CONFIG_FILE=${CONFIG_DIR}/config_panda
+
+cat ${RANCHER_SOURCE}/tests/v2/validation/provisioning/config_panda_base > ${CONFIG_FILE}
+
+cat << EOF >> ${CONFIG_FILE}
+
+provisioningInput:
+  rke2KubernetesVersion: [${RKE2_VERSIONS}]
+  providers: ["aws"]
+  hardened: false
+  psact: ""
+  cni: ["calico"]
+
+awsCredentials:
+  accessKey: "${AWSCN_AK}"
+  secretKey: "${AWSCN_SK}"
+  defaultRegion: "ap-northwest-1"
+EOF
+
+CONFIG_FILE_AMD64=${CONFIG_DIR}/config_panda_amd64
+cat ${CONFIG_FILE} > ${CONFIG_FILE_AMD64}
+cat ../../awscn/ubuntu-amd64 >> ${CONFIG_FILE_AMD64}
+
+CONFIG_FILE_ARM64=${CONFIG_DIR}/config_panda_arm64
+cat ${CONFIG_FILE} > ${CONFIG_FILE_ARM64}
+cat ../../awscn/ubuntu-arm64 >> ${CONFIG_FILE_ARM64}
+
+cd ${CONFIG_DIR}
+if [ -z "${ARM64_ONLY}" ]; then
+    CATTLE_TEST_CONFIG=${CONFIG_FILE_AMD64} gotestsum --format standard-verbose \
+        --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/rke2 \
+        --junitfile awscn-rke2-amd64-results.xml -- -timeout=60m -tags=validation -v \
+        -run "TestRKE2ProvisioningTestSuite/TestPandariaProvisioningRKE2Cluster"
+fi
+if [ -z "${AMD64_ONLY}" ]; then
+    CATTLE_TEST_CONFIG=${CONFIG_FILE_ARM64} gotestsum --format standard-verbose \
+        --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/rke2 \
+        --junitfile awscn-rke2-arm64-results.xml -- -timeout=60m -tags=validation -v \
+        -run "TestRKE2ProvisioningTestSuite/TestPandariaProvisioningRKE2Cluster"
+fi

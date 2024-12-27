@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd $(dirname $0)
+
+./k3s-openeuler-huaweicloud
+./rke1-openeuler-huaweicloud
+./rke2-openeuler-huaweicloud

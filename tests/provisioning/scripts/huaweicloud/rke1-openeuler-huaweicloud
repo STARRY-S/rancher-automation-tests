@@ -1,0 +1,77 @@
+#!/bin/bash
+
+source $(dirname $0)/../version
+if [ -z "${RKE1_VERSIONS}" ]; then
+    exit 0
+fi
+
+cd $(dirname $0)
+
+if [[ ! -e ${HOME}/.ssh/${SSH_KEY} ]]; then
+    mkdir -p $HOME/.ssh
+    cp /opt/config/autok3s/${SSH_KEY} $HOME/.ssh/
+    chmod 600 $HOME/.ssh/${SSH_KEY}
+fi
+
+rm -f ${RANCHER_SOURCE}/tests/v2/validation/provisioning/rke1/config_panda_*
+
+CONFIG_DIR=${RANCHER_SOURCE}/tests/v2/validation/provisioning/rke1/
+CONFIG_FILE=${CONFIG_DIR}/config_panda
+
+cat ${RANCHER_SOURCE}/tests/v2/validation/provisioning/config_panda_base > ${CONFIG_FILE}
+
+if [ -n "${RKE1_VERSIONS}" ]; then
+    RKE1_VERSIONS=$(IFS=, ; echo "${RKE1_VERSIONS[*]}")
+fi
+
+cat << EOF >> ${CONFIG_FILE}
+
+provisioningInput:
+  nodePools:
+    - pools: {}
+      nodeRoles:
+        controlplane: true
+        etcd: true
+        worker: true
+        quantity: 1
+        drainBeforeDelete: false
+  rke1KubernetesVersion: [ ${RKE1_VERSIONS} ]
+  nodeProviders: [ "huawei" ]
+  cni: [ "canal" ]
+
+huaweiECSConfigs:
+  huaweiAccessKey: "${HUAWEI_ACCESS_KEY}"
+  huaweiSecretKey: "${HUAWEI_SECRET_KEY}"
+  huaweiProjectID: "${HUAWEI_PROJECT_ID}"
+  region: "${HUAWEI_REGION_ID}"
+  ecsConfig:
+    - imageRef: "4ac84693-49d6-459b-a15f-264b405939df" # openEuler-24.03-LTS-arm64-20240628
+      # kc2.xlarge.2 4c8g
+      flavorRef: "kc2.xlarge.2"
+      sshUser: "openeuler"
+      keyName: "${SSH_KEY}" # {HOME}/.ssh/{SSH_KEY}
+      vpcID: "42231883-e158-4a2f-b625-20cdb435d4b0"
+      subnetID: "c93c0d9b-0b30-46ab-bd04-7c2df88fd5ea"
+      eipType: "5_bgp"
+      bandwidthSize: 50 # Both download & upload bandwith to 50Mbit
+      bandwidthShareType: "PER"
+      bandwidthChargeMode: "traffic"
+      rootVolumeSize: 40
+      rootVolumeType: "SSD"
+      dataVolumeSize: 10
+      dataVolumeType: "SSD"
+      securityGroups:
+        - "c241ea61-8ce2-48ba-a9e4-0f38a17a97d3" # all-open
+      # Use cloud-init to install docker
+      userData: "IyEvYmluL2Jhc2gKCnNldCAtZXh1byBwaXBlZmFpbAoKY2QgL3Jvb3QKCkFSQ0g9IiQodW5hbWUgLW0pIgp3aGlsZSBbWyAhIC1lICJpbnN0YWxsLWRvY2tlci5zaCIgXV07IGRvCiAgICB3Z2V0IC0tdGltZW91dD0xMjAgImh0dHBzOi8vc3RhcnJ5LXB1YmxpYy1maWxlcy5zMy5hcC1ub3J0aGVhc3QtMS5hbWF6b25hd3MuY29tL2RvY2tlci9pbnN0YWxsLWRvY2tlci5zaCIgfHwgdHJ1ZQogICAgc2xlZXAgMQpkb25lCndoaWxlIFtbICEgLWUgImNvbnRhaW5lcmQudGFyLmd6IiBdXTsgZG8KICAgIHdnZXQgLS10aW1lb3V0PTEyMCAiaHR0cHM6Ly9zdGFycnktcHVibGljLWZpbGVzLnMzLmFwLW5vcnRoZWFzdC0xLmFtYXpvbmF3cy5jb20vZG9ja2VyLyR7QVJDSH0vY29udGFpbmVyZC50YXIuZ3oiIHx8IHRydWUKICAgIHNsZWVwIDEKZG9uZQp3aGlsZSBbWyAhIC1lICJkb2NrZXIudGFyLmd6IiBdXTsgZG8KICAgIHdnZXQgLS10aW1lb3V0PTEyMCAiaHR0cHM6Ly9zdGFycnktcHVibGljLWZpbGVzLnMzLmFwLW5vcnRoZWFzdC0xLmFtYXpvbmF3cy5jb20vZG9ja2VyLyR7QVJDSH0vZG9ja2VyLnRhci5neiIgfHwgdHJ1ZQogICAgc2xlZXAgMQpkb25lCgpjaG1vZCAreCBpbnN0YWxsLWRvY2tlci5zaApta2RpciAtcCAvZXRjL2RvY2tlcgplY2hvICd7CiAgICAicmVnaXN0cnktbWlycm9ycyI6IFsKICAgICAgICAiaHR0cHM6Ly9kb2NrZXIuaHhzdGFycnlzLm1lIgogICAgXQp9JyA+IC9ldGMvZG9ja2VyL2RhZW1vbi5qc29uCgpiYXNoIC4vaW5zdGFsbC1kb2NrZXIuc2gKCnVzZXJtb2QgLWFHIGRvY2tlciBvcGVuZXVsZXIK"
+      roles:
+        - "controlplane"
+        - "etcd"
+        - "worker"
+EOF
+
+cd ${CONFIG_DIR}
+    CATTLE_TEST_CONFIG=${CONFIG_FILE} gotestsum --format standard-verbose \
+        --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/rke1 \
+        --junitfile huaweicloud-rke1-results.xml -- -timeout=60m -tags=validation -v \
+        -run "TestCustomClusterRKE1ProvisioningTestSuite/TestProvisioningRKE1CustomClusterDynamicInputStandardUser"

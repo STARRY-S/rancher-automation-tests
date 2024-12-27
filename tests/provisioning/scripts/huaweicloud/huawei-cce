@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -euo pipefail
+cd $(dirname $0)
+
+# Ensure HUAWEI_ACCESS_KEY, HUAWEI_SECRET_KEY and HUAWEI_PROJECT_ID defined
+HUAWEI_ACCESS_KEY=${HUAWEI_ACCESS_KEY}
+HUAWEI_SECRET_KEY=${HUAWEI_SECRET_KEY}
+HUAWEI_PROJECT_ID=${HUAWEI_PROJECT_ID}
+HUAWEI_REGION_ID=${HUAWEI_REGION_ID:-"cn-east-3"}
+
+CONFIG_DIR=${RANCHER_SOURCE}/tests/v2/validation/provisioning/hosted/cce/
+CONFIG_FILE=${CONFIG_DIR}/config.yaml
+
+cat ${RANCHER_SOURCE}/tests/v2/validation/provisioning/config_panda_base > ${CONFIG_FILE}
+cat << EOF >> ${CONFIG_FILE}
+huaweiCredentials:
+  accessKey: "${HUAWEI_ACCESS_KEY}"
+  secretKey: "${HUAWEI_SECRET_KEY}"
+  projectID: "${HUAWEI_PROJECT_ID}"
+  regionID: "${HUAWEI_REGION_ID}"
+EOF
+
+cat ../../huaweicloud/cce-config.yaml >> ${CONFIG_FILE}
+
+cd ${CONFIG_DIR}
+CATTLE_TEST_CONFIG=${CONFIG_FILE} gotestsum --format standard-verbose \
+    --packages=github.com/rancher/rancher/tests/v2/validation/provisioning/hosted/cce \
+    --junitfile huawei-cce-result.xml -- -timeout=60m -tags=validation -v \
+    -run "TestHostedCCEClusterProvisioningTestSuite/TestProvisioningHostedCCE"

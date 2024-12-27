@@ -1,0 +1,16 @@
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://registry-1.docker.io"
+  registry.rancher.cn:
+    endpoint:
+      - "https://registry.rancher.cn"
+configs:
+  "registry-1.docker.io":
+    auth:
+      username: DOCKERHUB_USERNAME
+      password: DOCKERHUB_PASSWORD
+  "registry.rancher.cn":
+    auth:
+      username: PRIME_REGISTRY_USERNAME
+      password: PRIME_REGISTRY_PASSWORD
