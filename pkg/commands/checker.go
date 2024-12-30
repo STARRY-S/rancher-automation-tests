@@ -54,17 +54,16 @@ func (cc *checkerCmd) addCommands() {
 	addCommands(
 		cc.cmd,
 		newAwsCmd(),
-		newAwscnCmd(),
 		newHwcloudCmd(),
 		newVersionCmd(),
 	)
 }
 
 // checkEnv will raise fatal error if both ENV and command options were not provided.
-func checkEnv(p *string, key string) {
+func checkEnv(p *string, key string, required bool) {
 	if *p == "" {
 		*p, _ = os.LookupEnv(key)
-		if *p == "" {
+		if *p == "" && required {
 			logrus.Fatalf("%v not set", key)
 		}
 	}

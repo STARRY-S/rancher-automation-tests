@@ -52,10 +52,10 @@ func newHwcloudCmd() *hwcloudCmd {
 }
 
 func (cc *hwcloudCmd) prepareProviders() (provider.Providers, error) {
-	checkEnv(&cc.ak, ENV_HUAWEI_ACCESS_KEY)
-	checkEnv(&cc.sk, ENV_HUAWEI_SECRET_KEY)
-	checkEnv(&cc.region, ENV_HUAWEI_REGION_ID)
-	checkEnv(&cc.projectID, ENV_HUAWEI_PROJECT_ID)
+	checkEnv(&cc.ak, ENV_HUAWEI_ACCESS_KEY, true)
+	checkEnv(&cc.sk, ENV_HUAWEI_SECRET_KEY, true)
+	checkEnv(&cc.region, ENV_HUAWEI_REGION_ID, true)
+	checkEnv(&cc.projectID, ENV_HUAWEI_PROJECT_ID, true)
 
 	p, err := hwcloud.NewProvider(&hwcloud.Options{
 		AccessKey: cc.ak,
