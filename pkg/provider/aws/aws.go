@@ -95,6 +95,8 @@ func (p *provider) checkEC2(ctx context.Context) error {
 			logrus.Errorf("failed to terminate EC2 instance %v: %v", ids, err)
 			return fmt.Errorf("failed to terminate AWS ec2 instance: %w", err)
 		}
+		logrus.WithFields(logrus.Fields{"Provider": "AWS"}).
+			Infof("request to terminate EC2 instances %v", ids)
 	}
 	return nil
 }

@@ -79,6 +79,8 @@ func (p *provider) checkCCE(ctx context.Context) error {
 				logrus.Errorf("failed to delete CCE cluster %v: %v", c.Metadata.Name, err)
 				return fmt.Errorf("failed to delete hwcloud cce cluster: %w", err)
 			}
+			logrus.WithFields(logrus.Fields{"Provider": "HWCloud"}).
+				Infof("request to cleanup CCE cluster %v", c.Metadata.Name)
 		}
 	}
 
@@ -118,6 +120,8 @@ func (p *provider) checkECS(ctx context.Context) error {
 				logrus.Errorf("failed to delete server %v: %v", c.Name, err)
 				return fmt.Errorf("failed to delete hwcloud ECS server: %w", err)
 			}
+			logrus.WithFields(logrus.Fields{"Provider": "HWCloud"}).
+				Infof("request to cleanup ECS server %v", c.Name)
 		}
 	}
 	return nil
@@ -158,7 +162,7 @@ func (p *provider) Report() string {
 }
 
 func (p *provider) Unclean() bool {
-	return false
+	return p.unclean
 }
 
 type Options struct {

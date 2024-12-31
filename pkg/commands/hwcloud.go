@@ -39,6 +39,9 @@ func newHwcloudCmd() *hwcloudCmd {
 			if err := run(ps); err != nil {
 				return err
 			}
+			if err := saveReport(ps, cc.output, cc.autoYes); err != nil {
+				return err
+			}
 			return nil
 		},
 	})
@@ -63,7 +66,9 @@ func (cc *hwcloudCmd) prepareProviders() (provider.Providers, error) {
 	checkEnv(&cc.projectID, ENV_HUAWEI_PROJECT_ID, true)
 
 	p, err := hwcloud.NewProvider(&hwcloud.Options{
-		Filters:   cc.filters,
+		Filters: cc.filters,
+		Clean:   cc.clean,
+
 		AccessKey: cc.ak,
 		SecretKey: cc.sk,
 		ProjectID: cc.projectID,
