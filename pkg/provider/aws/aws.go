@@ -3,6 +3,8 @@ package aws
 import (
 	"context"
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -15,12 +17,19 @@ import (
 )
 
 type provider struct {
-	filter string
-	clean  bool
+	filters []string
+	clean   bool
 
 	cfg       aws.Config
 	ec2Client *ec2.Client
 	eksClient *eks.Client
+
+	unclean bool
+	reports []string
+}
+
+func (p *provider) Name() string {
+	return "aws"
 }
 
 func (p *provider) Check(ctx context.Context) error {
@@ -48,6 +57,7 @@ func (p *provider) checkEC2(ctx context.Context) error {
 	if o == nil || len(o.Reservations) == 0 {
 		return nil
 	}
+	ids := []string{}
 	for _, r := range o.Reservations {
 		if len(r.Instances) == 0 {
 			continue
@@ -58,9 +68,32 @@ func (p *provider) checkEC2(ctx context.Context) error {
 				i.State.Name == types.InstanceStateNameStopped {
 				continue
 			}
+
+			var name string
+			if len(i.Tags) > 0 {
+				for _, t := range i.Tags {
+					if strings.ToLower(utils.Value(t.Key)) == "name" {
+						name = utils.Value(t.Value)
+					}
+				}
+			}
+			if !utils.MatchFilters(name, p.filters) {
+				continue
+			}
+			s := fmt.Sprintf("EC2 instance ID [%v] name [%v] status [%v] Tags %v not cleanup!",
+				utils.Value(i.InstanceId), name, i.State.Name, utils.PrintNoIndent(i.Tags))
 			logrus.WithFields(logrus.Fields{"Provider": "AWS"}).
-				Warnf("EC2 instance ID [%v] status [%v] Tags %v not cleanup!",
-					utils.Value(i.InstanceId), i.State.Name, utils.PrintNoIndent(i.Tags))
+				Warn(s)
+			p.unclean = true
+			p.reports = append(p.reports, s)
+			ids = append(ids, utils.Value(i.InstanceId))
+		}
+	}
+
+	if p.clean && len(ids) > 0 {
+		if _, err := terminateInstances(ctx, p.ec2Client, ids); err != nil {
+			logrus.Errorf("failed to terminate EC2 instance %v: %v", ids, err)
+			return fmt.Errorf("failed to terminate AWS ec2 instance: %w", err)
 		}
 	}
 	return nil
@@ -75,17 +108,30 @@ func (p *provider) checkEKS(ctx context.Context) error {
 		return nil
 	}
 	for _, c := range o.Clusters {
+		s := fmt.Sprintf("EKS cluster [%v] not cleanup!", c)
 		logrus.WithFields(logrus.Fields{"Provider": "AWS"}).
-			Warnf("EKS cluster [%v] not cleanup!",
-				c)
+			Warn(s)
+		p.unclean = true
+		p.reports = append(p.reports, s)
 	}
-	logrus.Infof("XXXX cluster\n%v", utils.Print(o))
+
+	if p.clean {
+		logrus.Warnf("EKS cluster cleanup not supported yet, need to check manually!")
+	}
 	return nil
 }
 
+func (p *provider) Report() string {
+	return strings.Join(p.reports, "\n")
+}
+
+func (p *provider) Unclean() bool {
+	return p.unclean
+}
+
 type Options struct {
-	Filter string
-	Clean  bool
+	Filters []string
+	Clean   bool
 
 	AccessKey string
 	SecretKey string
@@ -103,11 +149,12 @@ func NewProvider(o *Options) (*provider, error) {
 	}
 
 	return &provider{
-		filter: o.Filter,
-		clean:  o.Clean,
+		filters: slices.Clone(o.Filters),
+		clean:   o.Clean,
 
 		cfg:       config,
 		ec2Client: newEc2Client(config),
 		eksClient: newEksClient(config),
+		reports:   make([]string, 0),
 	}, nil
 }

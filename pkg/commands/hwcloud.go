@@ -17,7 +17,9 @@ type hwcloudCmd struct {
 	*baseCmd
 
 	clean     bool
-	filter    string
+	filters   []string
+	output    string
+	autoYes   bool
 	ak        string
 	sk        string
 	region    string
@@ -34,15 +36,18 @@ func newHwcloudCmd() *hwcloudCmd {
 			if err != nil {
 				return err
 			}
-			run(ps)
-
+			if err := run(ps); err != nil {
+				return err
+			}
 			return nil
 		},
 	})
 
 	flags := cc.baseCmd.cmd.Flags()
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
-	flags.StringVarP(&cc.filter, "filter", "f", "", "filter string for mating instance name (Ex. auto-rancher-automation-)")
+	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
+	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
+	flags.BoolVarP(&cc.autoYes, "auto-yes", "y", false, "auto yes")
 	flags.StringVarP(&cc.ak, "ak", "", "", "huawei cloud access key ID (env '"+ENV_HUAWEI_ACCESS_KEY+"')")
 	flags.StringVarP(&cc.sk, "sk", "", "", "huawei cloud secret key (env '"+ENV_HUAWEI_SECRET_KEY+"')")
 	flags.StringVarP(&cc.region, "region", "r", "", "huawei cloud region (env '"+ENV_HUAWEI_REGION_ID+"')")
@@ -58,6 +63,7 @@ func (cc *hwcloudCmd) prepareProviders() (provider.Providers, error) {
 	checkEnv(&cc.projectID, ENV_HUAWEI_PROJECT_ID, true)
 
 	p, err := hwcloud.NewProvider(&hwcloud.Options{
+		Filters:   cc.filters,
 		AccessKey: cc.ak,
 		SecretKey: cc.sk,
 		ProjectID: cc.projectID,

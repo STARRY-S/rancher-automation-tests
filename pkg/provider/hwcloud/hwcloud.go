@@ -3,6 +3,7 @@ package hwcloud
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
@@ -13,13 +14,20 @@ import (
 )
 
 type provider struct {
-	filter string
-	clean  bool
+	filters []string
+	clean   bool
 
 	clientAuth *ClientAuth
 	cceClient  *cce.CceClient
 	ecsCliet   *ecs.EcsClient
 	eipClient  *eip.EipClient
+
+	unclean bool
+	reports []string
+}
+
+func (p *provider) Name() string {
+	return "hwcloud"
 }
 
 func (p *provider) Check(ctx context.Context) error {
@@ -54,18 +62,18 @@ func (p *provider) checkCCE(ctx context.Context) error {
 			continue
 		}
 
-		if p.filter != "" {
-			if strings.Index(c.Metadata.Name, p.filter) < 0 {
-				// skip filter not match
-				continue
-			}
+		if !utils.MatchFilters(c.Metadata.Name, p.filters) {
+			// skip filter not match
+			continue
 		}
 
 		// Check cluster name, AliasName, tag
+		s := fmt.Sprintf("CCE cluster [%v] status [%v] not cleanup!",
+			utils.Value(c.Metadata.Alias), utils.Value(c.Status.Phase))
 		logrus.WithFields(logrus.Fields{"Provider": "HWCloud"}).
-			Warnf("CCE cluster [%v] status [%v] not cleanup!",
-				utils.Value(c.Metadata.Alias), utils.Value(c.Status.Phase))
-
+			Warn(s)
+		p.reports = append(p.reports, s)
+		p.unclean = true
 		if p.clean {
 			if _, err := deleteCluster(p.cceClient, utils.Value(c.Metadata.Uid)); err != nil {
 				logrus.Errorf("failed to delete CCE cluster %v: %v", c.Metadata.Name, err)
@@ -94,17 +102,17 @@ func (p *provider) checkECS(ctx context.Context) error {
 			continue
 		}
 
-		if p.filter != "" {
-			if strings.Index(c.Name, p.filter) < 0 {
-				// skip filter not match
-				continue
-			}
+		if !utils.MatchFilters(c.Name, p.filters) {
+			// skip filter not match
+			continue
 		}
-
 		// Check server name, tag
+		s := fmt.Sprintf("ECS Server [%v] status [%v] flavor [%v] not cleanup!",
+			c.Name, c.Status, c.Flavor)
 		logrus.WithFields(logrus.Fields{"Provider": "HWCloud"}).
-			Warnf("ECS Server [%v] status [%v] flavor [%v] not cleanup!",
-				c.Name, c.Status, c.Flavor)
+			Warn(s)
+		p.reports = append(p.reports, s)
+		p.unclean = true
 		if p.clean {
 			if _, err := deleteServer(p.ecsCliet, c.Id); err != nil {
 				logrus.Errorf("failed to delete server %v: %v", c.Name, err)
@@ -135,16 +143,27 @@ func (p *provider) checkEIP(ctx context.Context) error {
 			continue
 		}
 
+		s := fmt.Sprintf("EIP [%v] status [%v] ID [%v] not cleanup!",
+			utils.Value(c.BandwidthName), c.Status.Value(), utils.Value(c.Id))
 		logrus.WithFields(logrus.Fields{"Provider": "HWCloud"}).
-			Warnf("EIP [%v] status [%v] ID [%v] not cleanup!",
-				utils.Value(c.BandwidthName), c.Status.Value(), utils.Value(c.Id))
+			Warn(s)
+		p.reports = append(p.reports, s)
+		p.unclean = true
 	}
 	return nil
 }
 
+func (p *provider) Report() string {
+	return strings.Join(p.reports, "\n")
+}
+
+func (p *provider) Unclean() bool {
+	return false
+}
+
 type Options struct {
-	Filter string
-	Clean  bool
+	Filters []string
+	Clean   bool
 
 	AccessKey string
 	SecretKey string
@@ -171,8 +190,8 @@ func NewProvider(o *Options) (*provider, error) {
 		return nil, fmt.Errorf("failed to init hwcloud eip client: %w", err)
 	}
 	return &provider{
-		filter: o.Filter,
-		clean:  o.Clean,
+		filters: slices.Clone(o.Filters),
+		clean:   o.Clean,
 
 		clientAuth: c,
 		cceClient:  cceClient,

@@ -16,12 +16,14 @@ const (
 type awsCmd struct {
 	*baseCmd
 
-	clean  bool
-	filter string
-	ak     string
-	sk     string
-	token  string
-	region string
+	clean   bool
+	filters []string
+	output  string
+	autoYes bool
+	ak      string
+	sk      string
+	token   string
+	region  string
 }
 
 func newAwsCmd() *awsCmd {
@@ -34,14 +36,21 @@ func newAwsCmd() *awsCmd {
 			if err != nil {
 				return err
 			}
-			run(ps)
+			if err := run(ps); err != nil {
+				return err
+			}
+			if err := saveReport(ps, cc.output, cc.autoYes); err != nil {
+				return err
+			}
 
 			return nil
 		},
 	})
 	flags := cc.baseCmd.cmd.Flags()
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
-	flags.StringVarP(&cc.filter, "filter", "f", "", "filter string for mating instance name (Ex. auto-rancher-automation-)")
+	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
+	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
+	flags.BoolVarP(&cc.autoYes, "auto-yes", "y", false, "auto yes")
 	flags.StringVarP(&cc.ak, "ak", "", "", "aws cloud access key (env '"+ENV_AWS_AK+"')")
 	flags.StringVarP(&cc.sk, "sk", "", "", "aws cloud secret key (env '"+ENV_AWS_SK+"')")
 	flags.StringVarP(&cc.token, "token", "", "", "aws cloud token (optional) (env '"+ENV_AWS_TK+"')")
@@ -57,8 +66,8 @@ func (cc *awsCmd) prepareProviders() (provider.Providers, error) {
 	checkEnv(&cc.region, ENV_AWS_REGION, true)
 
 	p, err := aws.NewProvider(&aws.Options{
-		Filter: cc.filter,
-		Clean:  cc.clean,
+		Filters: cc.filters,
+		Clean:   cc.clean,
 
 		AccessKey: cc.ak,
 		SecretKey: cc.sk,

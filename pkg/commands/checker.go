@@ -77,3 +77,8 @@ func run(ps provider.Providers) error {
 	logrus.Infof("Done")
 	return nil
 }
+
+// saveReport executes providers.SaveReport()
+func saveReport(ps provider.Providers, output string, autoYes bool) error {
+	return ps.SaveReport(signalContext, output, autoYes)
+}
