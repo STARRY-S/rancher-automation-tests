@@ -18,7 +18,7 @@ on:
         description: "Test case to run, separated by white spaces (Ex. huaweicloud/k3s-openeuler-huaweicloud)"
         required: false
         default: |
-          awscn/test-awscn
+          awscn/k3s-ubuntu-awscn awscn/rke2-ubuntu-awscn awscn/rke1-ubuntu-awscn
       RANCHER_CLUSTERS:
         description: 'Downstream cluster versions, separated by white spaces (Ex. v1.24.11+k3s1 v1.24.11+rke2r1)'
         required: true
