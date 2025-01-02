@@ -37,7 +37,7 @@ cp /opt/config/autok3s/$SSH_KEY tests/provisioning/$SSH_KEY
 # Pre-download Rancher go mod dependencies
 echo "Pre-download rancher go mod dependencies"
 cd $RANCHER_SOURCE
-# go mod tidy
+go mod tidy
 
 # Install gotestsum
 echo "Install gotestsum"
