@@ -101,7 +101,7 @@ jobs:
       - name: Rancher Server
         uses: ./.github/actions/rancher-server
         with:
-          K3S_VERSION: "v1.29.11+k3s1"
+          K3S_VERSION: "${{ env.K3S_VERSION }}"
           SSH_KEY_NAME: ${{ secrets.SSH_KEY }}
           SSH_SECRET_KEY: ${{ secrets.SSH_SECRET_KEY }}
           RPM_LOCAL_NAME: ${{ env.RPM_LOCAL_NAME }}
@@ -109,13 +109,13 @@ jobs:
           AUTOK3S_PROVIDER: "tencent"
           AUTOK3S_SSH_USER: "ubuntu"
           AUTOK3S_AMI: "img-487zeit5"
-          AUTOK3S_INSTANCE_TYPE: "SA5.LARGE8"
-          AUTOK3S_REGION: "ap-guangzhou"
-          AUTOK3S_ZONE: "ap-guangzhou-7"
-          AUTOK3S_SECURITY_GROUP: "sg-kml51k81"
+          AUTOK3S_INSTANCE_TYPE: "SA5.MEDIUM8"
+          AUTOK3S_REGION: "ap-hongkong"
+          AUTOK3S_ZONE: "ap-hongkong-3"
+          AUTOK3S_SECURITY_GROUP: "sg-nq8ubjkr"
           AUTOK3S_VOLUME_TYPE: "CLOUD_BSSD"
-          AUTOK3S_VPC: "vpc-k4hsepe7"
-          AUTOK3S_SUBNET: "subnet-787evz76"
+          AUTOK3S_VPC: "vpc-pmkrei8s"
+          AUTOK3S_SUBNET: "subnet-lctt744j"
           DOCKERHUB_USERNAME: ""
           DOCKERHUB_PASSWORD: ""
           PRIME_REGISTRY_USERNAME: ${{ env.PRIME_REGISTRY_USERNAME }}
