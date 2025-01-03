@@ -26,7 +26,7 @@ get_provider_args() {
                 --disk-category ${AUTOK3S_VOLUME_TYPE} --vpc ${AUTOK3S_VPC} \
                 --subnet ${AUTOK3S_SUBNET} --zone ${AUTOK3S_ZONE} \
                 --system-default-registry=registry.rancher.cn \
-                --internet-max-bandwidth-out=50 \
+                --internet-max-bandwidth-out=100 \
                 --user-data-path /tmp/userdata.sh"
             ;;
         alibaba)
@@ -38,7 +38,7 @@ get_provider_args() {
                 --region ${AUTOK3S_REGION} \
                 --disk-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
                 --disk-category ${AUTOK3S_VOLUME_TYPE} --v-switch ${AUTOK3S_VPC} \
-                --zone ${AUTOK3S_ZONE} --internet-max-bandwidth-out=50 \
+                --zone ${AUTOK3S_ZONE} --internet-max-bandwidth-out=100 \
                 --system-default-registry=registry.rancher.cn \
                 --user-data-path /tmp/userdata.sh"
             ;;
