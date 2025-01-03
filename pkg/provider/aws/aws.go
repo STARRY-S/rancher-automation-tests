@@ -65,7 +65,8 @@ func (p *provider) checkEC2(ctx context.Context) error {
 
 		for _, i := range r.Instances {
 			if i.State.Name == types.InstanceStateNameTerminated ||
-				i.State.Name == types.InstanceStateNameStopped {
+				i.State.Name == types.InstanceStateNameStopped ||
+				i.State.Name == types.InstanceStateNameStopping {
 				continue
 			}
 
