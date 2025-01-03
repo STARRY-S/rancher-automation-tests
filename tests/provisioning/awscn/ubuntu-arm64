@@ -2,12 +2,12 @@
 awsMachineConfigs:
   region: "cn-northwest-1"
   awsMachineConfig:
-    - ami: "ami-0448817ee466d7ba1"
+    - ami: "ami-0573a5204a1c695b7"
       instanceType: "c6g.large"
       sshUser: "ubuntu"
       vpcId: "vpc-0573a5204a1c695b7"
       volumeType: "gp3"
-      zone: "c"
+      zone: "b"
       retries: "5"
       rootSize: "20"
       requestSpotInstance: true
