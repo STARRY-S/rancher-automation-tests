@@ -22,7 +22,6 @@ autok3s create --provider ${AUTOK3S_PROVIDER} \
     --name ${RPM_LOCAL_NAME} \
     --master 1 \
     --k3s-version ${K3S_VERSION} \
-    --k3s-install-script "https://get.k3s.io" \
     --ssh-user ${AUTOK3S_SSH_USER} \
     --ssh-key-path /opt/config/autok3s/${SSH_KEY_NAME} \
     --registry /tmp/registries.yaml \

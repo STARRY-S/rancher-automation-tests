@@ -9,7 +9,7 @@ on:
         required: true
       K3S_VERSION:
         description: 'K3s version for Rancher Local Cluster'
-        default: 'v1.30.7+k3s1'
+        default: 'v1.29.11+k3s1'
         required: true
       RPM_LOCAL_NAME:
         description: 'Rancher local cluster name, for run multiple tests'
@@ -65,7 +65,7 @@ env:
 
   # ENV from secrets
   ADMIN_PWD: ${{ secrets.ADMIN_PWD }}       # Rancher password
-  SSH_KEY_PAIR: ${{ secrets.SSH_KEY_PAIR }} # Public Cloud SSH key-pair name (ID)
+  SSH_KEY_PAIR: ${{ secrets.SSH_KEY_PAIR_AWSCN }} # Public Cloud SSH key-pair name (ID)
   SSH_KEY: ${{ secrets.SSH_KEY }}           # SSH secret key filename
   SSH_SECRET_KEY: ${{ secrets.SSH_SECRET_KEY }} # SSH secret key PEM data
   PRIME_REGISTRY_USERNAME: ${{ secrets.PRIME_REGISTRY_USERNAME }}
@@ -75,6 +75,9 @@ env:
   # AWSCN (China)
   AWSCN_AK: ${{ secrets.AWSCN_AK }}
   AWSCN_SK: ${{ secrets.AWSCN_SK }}
+  AWS_AK: ${{ secrets.AWSCN_AK }}
+  AWS_SK: ${{ secrets.AWSCN_SK }}
+  AWS_REGION: "cn-northwest-1"
 
   # HWCloud
   HUAWEI_ACCESS_KEY: ${{ secrets.HUAWEI_ACCESS_KEY }}
@@ -100,22 +103,25 @@ jobs:
           go-version: 1.23.x
       - name: Rancher Server
         uses: ./.github/actions/rancher-server
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWSCN_AK }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWSCN_SK }}
         with:
           K3S_VERSION: "${{ env.K3S_VERSION }}"
           SSH_KEY_NAME: ${{ secrets.SSH_KEY }}
           SSH_SECRET_KEY: ${{ secrets.SSH_SECRET_KEY }}
           RPM_LOCAL_NAME: ${{ env.RPM_LOCAL_NAME }}
           AUTOK3S_VERSION: "v0.9.3"
-          AUTOK3S_PROVIDER: "tencent"
+          AUTOK3S_PROVIDER: "aws"
           AUTOK3S_SSH_USER: "ubuntu"
-          AUTOK3S_AMI: "img-487zeit5"
-          AUTOK3S_INSTANCE_TYPE: "SA5.MEDIUM8"
-          AUTOK3S_REGION: "ap-hongkong"
-          AUTOK3S_ZONE: "ap-hongkong-3"
-          AUTOK3S_SECURITY_GROUP: "sg-nq8ubjkr"
-          AUTOK3S_VOLUME_TYPE: "CLOUD_BSSD"
-          AUTOK3S_VPC: "vpc-pmkrei8s"
-          AUTOK3S_SUBNET: "subnet-lctt744j"
+          AUTOK3S_AMI: "ami-063dbdfa885edce48"
+          AUTOK3S_INSTANCE_TYPE: "c5a.xlarge"
+          AUTOK3S_REGION: "cn-northwest-1"
+          AUTOK3S_ZONE: "cn-northwest-1c"
+          AUTOK3S_SECURITY_GROUP: "sg-0d0bb6c7aedebaa51"
+          AUTOK3S_VOLUME_TYPE: "gp3"
+          AUTOK3S_VPC: "vpc-04102d93beaeae434"
+          AUTOK3S_SUBNET: "subnet-0ad3642defaf29191"
           DOCKERHUB_USERNAME: ""
           DOCKERHUB_PASSWORD: ""
           PRIME_REGISTRY_USERNAME: ${{ env.PRIME_REGISTRY_USERNAME }}
@@ -128,10 +134,6 @@ jobs:
           scripts/ci/setup.sh
       - name: Run Provisioning Tests
         uses: ./.github/actions/run-with-post
-        env:
-          AWS_AK: ${{ env.AWSCN_AK }}
-          AWS_SK: ${{ env.AWSCN_SK }}
-          AWS_REGION: "cn-northwest-1"
         with:
           RUN: "scripts/ci/run.sh"
           POST: "scripts/ci/clean.sh aws"

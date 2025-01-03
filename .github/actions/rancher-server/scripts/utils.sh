@@ -13,6 +13,9 @@ get_provider_args() {
                 --root-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
                 --volume-type ${AUTOK3S_VOLUME_TYPE} \
                 --vpc-id ${AUTOK3S_VPC} --zone ${AUTOK3S_ZONE} \
+                --k3s-install-script="https://rancher-mirror.rancher.cn/k3s/k3s-install.sh" \
+                --system-default-registry=docker.hxstarrys.me \
+                --install-env "INSTALL_K3S_MIRROR=cn" \
                 --user-data-path /tmp/userdata.sh"
             ;;
         tencent)
@@ -25,8 +28,9 @@ get_provider_args() {
                 --spot --disk-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
                 --disk-category ${AUTOK3S_VOLUME_TYPE} --vpc ${AUTOK3S_VPC} \
                 --subnet ${AUTOK3S_SUBNET} --zone ${AUTOK3S_ZONE} \
-                --system-default-registry=registry.rancher.cn \
+                --system-default-registry=docker.io \
                 --internet-max-bandwidth-out=100 \
+                --k3s-install-script "https://get.k3s.io" \
                 --user-data-path /tmp/userdata.sh"
             ;;
         alibaba)

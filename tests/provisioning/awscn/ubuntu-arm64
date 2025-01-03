@@ -5,7 +5,7 @@ awsMachineConfigs:
     - ami: "ami-0448817ee466d7ba1"
       instanceType: "c6g.large"
       sshUser: "ubuntu"
-      vpcId: "vpc-04102d93beaeae434"
+      vpcId: "vpc-0573a5204a1c695b7"
       volumeType: "gp3"
       zone: "c"
       retries: "5"

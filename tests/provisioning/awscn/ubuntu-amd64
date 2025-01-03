@@ -2,7 +2,7 @@
 awsMachineConfigs:
   region: "cn-northwest-1"
   awsMachineConfig:
-    - ami: "ami-06f2846ff1f5bce35"
+    - ami: "ami-063dbdfa885edce48"
       instanceType: "c5a.large"
       sshUser: "ubuntu"
       vpcId: "vpc-04102d93beaeae434"
@@ -16,4 +16,3 @@ awsMachineConfigs:
         - "etcd"
         - "controlplane"
         - "worker"
-
