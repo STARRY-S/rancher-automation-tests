@@ -36,6 +36,7 @@ function create_ec2_amd64() {
             --driver amazonec2 \
             --amazonec2-region cn-northwest-1 \
             --amazonec2-vpc-id vpc-04102d93beaeae434 \
+            --amazonec2-subnet-id subnet-0ad3642defaf29191 \
             --amazonec2-zone c \
             --amazonec2-ami ami-063dbdfa885edce48 \
             --amazonec2-instance-type c5a.xlarge \
@@ -59,7 +60,8 @@ function create_ec2_arm64() {
             --driver amazonec2 \
             --amazonec2-region cn-northwest-1 \
             --amazonec2-vpc-id vpc-04102d93beaeae434 \
-            --amazonec2-zone b \
+            --amazonec2-subnet-id subnet-0ad3642defaf29191 \
+            --amazonec2-zone c \
             --amazonec2-ami ami-0573a5204a1c695b7 \
             --amazonec2-instance-type c6g.xlarge \
             --amazonec2-ssh-user ubuntu \

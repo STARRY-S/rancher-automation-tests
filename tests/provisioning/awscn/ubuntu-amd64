@@ -6,6 +6,7 @@ awsMachineConfigs:
       instanceType: "c5a.large"
       sshUser: "ubuntu"
       vpcId: "vpc-04102d93beaeae434"
+      subnetId: "subnet-0ad3642defaf29191"
       volumeType: "gp3"
       zone: "c"
       retries: "5"

@@ -5,9 +5,10 @@ awsMachineConfigs:
     - ami: "ami-0573a5204a1c695b7"
       instanceType: "c6g.large"
       sshUser: "ubuntu"
-      vpcId: "vpc-0573a5204a1c695b7"
+      vpcId: "vpc-04102d93beaeae434"
+      subnetId: "subnet-0ad3642defaf29191"
       volumeType: "gp3"
-      zone: "b"
+      zone: "c"
       retries: "5"
       rootSize: "20"
       requestSpotInstance: true
