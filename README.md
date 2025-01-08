@@ -3,6 +3,7 @@
 [![Build](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/ci.yaml/badge.svg)](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/ci.yaml)
 [![HWCloud Provisioning Tests](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/provisioning-tests-hwcloud.yaml/badge.svg)](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/provisioning-tests-hwcloud.yaml)
 [![AWSCN Provisioning Tests](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/provisioning-tests-awscn.yaml/badge.svg)](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/provisioning-tests-awscn.yaml)
+[![Validation Tests](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/validation-tests.yaml/badge.svg)](https://github.com/STARRY-S/rancher-automation-tests/actions/workflows/validation-tests.yaml)
 
 Automate Rancher Prime GC automation tests on GitHub Actions.
 

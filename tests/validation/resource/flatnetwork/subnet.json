@@ -1,0 +1,29 @@
+{
+    "apiVersion": "flatnetwork.pandaria.io/v1",
+    "kind": "FlatNetworkSubnet",
+    "metadata": {
+        "name": "",
+        "annotations": {},
+        "namespace": "cattle-flat-network",
+        "labels": {
+            "project": ""
+        }
+    },
+    "spec": {
+        "vlan": 0,
+        "cidr": "",
+        "flatMode": "",
+        "gateway": "",
+        "master": "",
+        "mode": "bridge",
+        "routes": [],
+        "routeSettings": {
+            "addClusterCIDR": false,
+            "addServiceCIDR": false,
+            "addNodeCIDR": false,
+            "addPodIPToHost": false,
+            "flatNetworkDefaultGateway": false
+        },
+        "ranges": []
+    }
+}

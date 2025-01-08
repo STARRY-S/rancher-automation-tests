@@ -1,0 +1,84 @@
+name: Rancher Local Server (AWS Global)
+
+on:
+  workflow_dispatch:
+    inputs:
+      RPM_VERSION:
+        description: 'Rancher Version (Ex. v2.10.0-ent-rcX)'
+        default: 'v2.10.1-ent-rc3'
+        required: true
+      K3S_VERSION:
+        description: 'K3s version for Rancher Local Cluster'
+        default: 'v1.29.11+k3s1'
+        required: true
+      RPM_LOCAL_NAME:
+        description: 'Rancher local cluster name, for run multiple tests'
+        default: 'starry-custom-1'
+
+env:
+  # Pre-define environment variables
+  CATTLE_MACHINE_VERSION: v0.15.0-rancher116
+  AUTOK3S_VERSION: v0.9.3
+
+  # ENV defined by workflow dispatch inputs
+  RPM_VERSION: ${{ github.event.inputs.RPM_VERSION }}
+  K3S_VERSION: ${{ github.event.inputs.K3S_VERSION }}
+  RPM_LOCAL_NAME: ${{ github.event.inputs.RPM_LOCAL_NAME }}
+
+  # ENV from secrets
+  ADMIN_PWD: ${{ secrets.ADMIN_PWD }}       # Rancher password
+  SSH_KEY_PAIR: ${{ secrets.SSH_KEY_PAIR_AWS }} # Public Cloud SSH key-pair name (ID)
+  SSH_KEY: ${{ secrets.SSH_KEY }}           # SSH secret key filename
+  SSH_SECRET_KEY: ${{ secrets.SSH_SECRET_KEY }} # SSH secret key PEM data
+  PRIME_REGISTRY_USERNAME: ${{ secrets.PRIME_REGISTRY_USERNAME }}
+  PRIME_REGISTRY_PASSWORD: ${{ secrets.PRIME_REGISTRY_PASSWORD }}
+  RANCHER_REPO_OAUTH_TOKEN: ${{ secrets.RANCHER_REPO_OAUTH_TOKEN }} # READ ONLY token for access rancher source code repo.
+
+  # AWS (Global)
+  AWS_AK: ${{ secrets.AWS_AK }}
+  AWS_SK: ${{ secrets.AWS_SK }}
+  AWS_REGION: "ap-northeast-3"
+
+jobs:
+  rancher-server:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.x
+      - name: Rancher Server
+        uses: ./.github/actions/rancher-server
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_AK }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SK }}
+        with:
+          K3S_VERSION: "${{ env.K3S_VERSION }}"
+          SSH_KEY_NAME: ${{ secrets.SSH_KEY }}
+          SSH_SECRET_KEY: ${{ secrets.SSH_SECRET_KEY }}
+          RPM_LOCAL_NAME: ${{ env.RPM_LOCAL_NAME }}
+          AUTOK3S_VERSION: "v0.9.3"
+          AUTOK3S_PROVIDER: "aws"
+          AUTOK3S_SSH_USER: "ubuntu"
+          AUTOK3S_AMI: "ami-0206f4f885421736f"
+          AUTOK3S_INSTANCE_TYPE: "c5.xlarge"
+          AUTOK3S_REGION: "ap-northeast-3"
+          AUTOK3S_ZONE: "ap-northeast-3b"
+          AUTOK3S_SECURITY_GROUP: "sg-03d0841892641d808"
+          AUTOK3S_VOLUME_TYPE: "gp3"
+          AUTOK3S_VPC: "vpc-c2d5bcab"
+          AUTOK3S_SUBNET: "subnet-0934cc60"
+          DOCKERHUB_USERNAME: ""
+          DOCKERHUB_PASSWORD: ""
+          PRIME_REGISTRY_USERNAME: ${{ env.PRIME_REGISTRY_USERNAME }}
+          PRIME_REGISTRY_PASSWORD: ${{ env.PRIME_REGISTRY_PASSWORD }}
+      - name: Waiting for user cancel
+        uses: ./.github/actions/run-with-post
+        with:
+          RUN: |
+            bash -c "echo 'Rancher server is available'; echo Server URL: $(echo https://$RANCHER_SERVER_URL | base64); sleep 8h"
+          POST: "scripts/ci/clean.sh aws"

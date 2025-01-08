@@ -28,6 +28,14 @@ go.work.sum
 # env file
 .env
 
+# pytest cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache
+k8s_kube_config
+*.swp
+
 # Temporary files
 tmp*
 /*.txt

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd $(dirname $0)/../../
+
+set -euo pipefail
+
+echo "Start run Rancher FlatNetwork V2 validation tests"
+
+# Install flatnetwork chart before run tests.
+pytest -v -s testcase/flatnetwork/test_app_setup.py
+
+# Run other test cases.
+pytest -v -s testcase/flatnetwork/

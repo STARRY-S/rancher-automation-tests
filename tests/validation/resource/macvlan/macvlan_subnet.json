@@ -1,0 +1,23 @@
+{
+    "apiVersion": "macvlan.cluster.cattle.io/v1",
+    "kind": "MacvlanSubnet",
+    "metadata": {
+        "name": "",
+        "annotations": {},
+        "namespace": "kube-system",
+        "labels": {
+            "project": ""
+        }
+    },
+    "spec": {
+        "master": "",
+        "vlan": 0,
+        "cidr": "",
+        "mode": "bridge",
+        "gateway": "",
+        "ranges": [],
+        "routes": [],
+        "podDefaultGateway": {},
+        "ipDelayReuse": 0
+    }
+}

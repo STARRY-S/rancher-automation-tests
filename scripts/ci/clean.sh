@@ -4,8 +4,8 @@ cd $(dirname $0)/../../
 
 set -exuo pipefail
 
-rm -rf $RANCHER_SOURCE || true
-rm /opt/config/autok3s/$SSH_KEY || true
+rm -rf ${RANCHER_SOURCE:-"UNKNOW"} || true
+rm /opt/config/autok3s/${SSH_KEY:-} || true
 rm -r ${HOME}/.ssh/ || true
 
 # Build checker cli

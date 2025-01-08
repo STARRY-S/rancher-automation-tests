@@ -1,0 +1,18 @@
+{
+    "type": "service",
+    "spec": {
+        "ports": [],
+        "selector": {
+            "workload.user.cattle.io/workloadselector": ""
+        },
+        "type": ""
+    },
+    "metadata": {
+        "name": "",
+        "namespace": "",
+        "annotations": {
+            "management.cattle.io/ui-managed": "true"
+        },
+        "ownerReferences": []
+    }
+}

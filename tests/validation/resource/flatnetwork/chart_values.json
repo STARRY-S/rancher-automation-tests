@@ -1,0 +1,63 @@
+{
+    "charts": [
+        {
+            "annotations": {
+                "catalog.cattle.io/ui-source-repo": "pandaria-catalog",
+                "catalog.cattle.io/ui-source-repo-type": "cluster"
+            },
+            "chartName": "rancher-flat-network-crd",
+            "releaseName": "rancher-flat-network-crd",
+            "values": {
+                "global": {
+                    "cattle": {
+                        "clusterId": "",
+                        "clusterName": "",
+                        "rkePathPrefix": "",
+                        "rkeWindowsPathPrefix": "",
+                        "systemDefaultRegistry": "",
+                        "systemProjectId": "",
+                        "url": ""
+                    },
+                    "systemDefaultRegistry": ""
+                }
+            },
+            "version": "0.1.0"
+        },
+        {
+            "annotations": {
+                "catalog.cattle.io/ui-source-repo": "pandaria-catalog",
+                "catalog.cattle.io/ui-source-repo-type": "cluster"
+            },
+            "chartName": "rancher-flat-network",
+            "releaseName": "rancher-flat-network",
+            "values": {
+                "clusterType": "K3s",
+                "multus": {
+                    "cni": {
+                        "version": "1.0.0"
+                    }
+                },
+                "global": {
+                    "cattle": {
+                        "clusterId": "",
+                        "clusterName": "",
+                        "rkePathPrefix": "",
+                        "rkeWindowsPathPrefix": "",
+                        "systemDefaultRegistry": "",
+                        "systemProjectId": "",
+                        "url": ""
+                    },
+                    "systemDefaultRegistry": ""
+                }
+            },
+            "version": "0.1.0"
+        }
+    ],
+    "disableOpenAPIValidation": false,
+    "namespace": "cattle-flat-network",
+    "noHooks": false,
+    "projectId": "",
+    "skipCRDs": false,
+    "timeout": "600s",
+    "wait": true
+}

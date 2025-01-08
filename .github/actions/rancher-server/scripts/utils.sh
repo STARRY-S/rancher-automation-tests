@@ -3,7 +3,7 @@
 set -euo pipefail
 
 get_provider_args() {
-    echo "Create Rancher Prime Server by provider {$AUTOK3S_PROVIDER}"
+    echo "Create Rancher Prime Server by provider [$AUTOK3S_PROVIDER]"
     local AUTOK3S_CONTEXT=${AUTOK3S_REGION}.${AUTOK3S_PROVIDER}
     case ${AUTOK3S_PROVIDER} in
         aws)
@@ -13,8 +13,18 @@ get_provider_args() {
                 --root-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
                 --volume-type ${AUTOK3S_VOLUME_TYPE} \
                 --vpc-id ${AUTOK3S_VPC} --zone ${AUTOK3S_ZONE} \
+                --system-default-registry=docker.io \
+                --user-data-path /tmp/userdata.sh"
+            ;;
+        awscn)
+            AUTOK3S_CREATE_ARGS="--keypair-name ${SSH_KEY_PAIR} --ami ${AUTOK3S_AMI} \
+                --instance-type ${AUTOK3S_INSTANCE_TYPE} \
+                --region ${AUTOK3S_REGION} --request-spot-instance \
+                --root-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
+                --volume-type ${AUTOK3S_VOLUME_TYPE} \
+                --vpc-id ${AUTOK3S_VPC} --zone ${AUTOK3S_ZONE} \
                 --k3s-install-script="https://rancher-mirror.rancher.cn/k3s/k3s-install.sh" \
-                --system-default-registry=docker.hxstarrys.me \
+                --system-default-registry=registry.rancher.cn \
                 --install-env "INSTALL_K3S_MIRROR=cn" \
                 --user-data-path /tmp/userdata.sh"
             ;;
@@ -28,7 +38,7 @@ get_provider_args() {
                 --spot --disk-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
                 --disk-category ${AUTOK3S_VOLUME_TYPE} --vpc ${AUTOK3S_VPC} \
                 --subnet ${AUTOK3S_SUBNET} --zone ${AUTOK3S_ZONE} \
-                --system-default-registry=docker.io \
+                --system-default-registry=registry.rancher.cn \
                 --internet-max-bandwidth-out=100 \
                 --k3s-install-script "https://get.k3s.io" \
                 --user-data-path /tmp/userdata.sh"

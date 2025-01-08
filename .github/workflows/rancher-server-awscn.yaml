@@ -1,4 +1,4 @@
-name: HWCloud Provisioning Tests
+name: Rancher Local Server (AWS China)
 
 on:
   workflow_dispatch:
@@ -13,36 +13,7 @@ on:
         required: true
       RPM_LOCAL_NAME:
         description: 'Rancher local cluster name, for run multiple tests'
-        default: 'starry-hwcloud-1'
-      TEST_CASE:
-        description: "Test case to run, separated by white spaces (Ex. huaweicloud/k3s-openeuler-huaweicloud)"
-        required: false
-        default: |
-          huaweicloud/k3s-openeuler-huaweicloud huaweicloud/rke2-openeuler-huaweicloud huaweicloud/rke1-openeuler-huaweicloud
-      RANCHER_CLUSTERS:
-        description: 'Downstream cluster versions, separated by white spaces (Ex. v1.24.11+k3s1 v1.24.11+rke2r1)'
-        required: true
-        default: |
-          v1.31.4-rancher1-1
-            v1.30.8-rancher1-1
-            v1.29.12-rancher1-1
-            v1.28.15-rancher1-1
-            v1.31.4+rke2r1
-            v1.30.8+rke2r1
-            v1.29.12+rke2r1
-            v1.28.15+rke2r1
-            v1.31.4+k3s1
-            v1.30.8+k3s1
-            v1.29.12+k3s1
-            v1.28.15+k3s1
-      RANCHER_CODE_REPO:
-        description: 'GitHub Repo of rancher'
-        required: true
-        default: "github.com/cnrancher/pandaria"
-      ENVS:
-        description: 'Other envs for tests, separated by white spaces (Ex. ENV1=AAA ENV2=BBB)'
-        required: false
-        default: 'ARM64_ONLY=1 AMD64_ONLY='
+        default: 'starry-custom-1'
 
 env:
   # Pre-define environment variables
@@ -53,10 +24,6 @@ env:
   RPM_VERSION: ${{ github.event.inputs.RPM_VERSION }}
   K3S_VERSION: ${{ github.event.inputs.K3S_VERSION }}
   RPM_LOCAL_NAME: ${{ github.event.inputs.RPM_LOCAL_NAME }}
-  TEST_CASE: ${{ github.event.inputs.TEST_CASE }}
-  RANCHER_CLUSTERS: ${{ github.event.inputs.RANCHER_CLUSTERS }}
-  RANCHER_CODE_REPO: ${{ github.event.inputs.RANCHER_CODE_REPO }}
-  INPUT_ENVS: ${{ github.event.inputs.ENVS }}
 
   # ENV from secrets
   ADMIN_PWD: ${{ secrets.ADMIN_PWD }}       # Rancher password
@@ -70,19 +37,12 @@ env:
   # AWSCN (China)
   AWSCN_AK: ${{ secrets.AWSCN_AK }}
   AWSCN_SK: ${{ secrets.AWSCN_SK }}
-
-  # HWCloud
-  HUAWEI_ACCESS_KEY: ${{ secrets.HUAWEI_ACCESS_KEY }}
-  HUAWEI_SECRET_KEY: ${{ secrets.HUAWEI_SECRET_KEY }}
-  HUAWEI_PROJECT_ID: ${{ secrets.HUAWEI_PROJECT_ID }}
-  HUAWEI_REGION_ID: ${{ secrets.HUAWEI_REGION_ID }}
-
-  # Tencent cloud
-  TENCENT_ACCESS_KEY_ID: ${{ secrets.TENCENT_ACCESS_KEY_ID }}
-  TENCENT_ACCESS_KEY_SECRET: ${{ secrets.TENCENT_ACCESS_KEY_SECRET }}
+  AWS_AK: ${{ secrets.AWSCN_AK }}
+  AWS_SK: ${{ secrets.AWSCN_SK }}
+  AWS_REGION: "cn-northwest-1"
 
 jobs:
-  provisioning-tests:
+  rancher-server:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -93,7 +53,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.23.x
-      - name: Rancher Server on AWS CN
+      - name: Rancher Server
         uses: ./.github/actions/rancher-server
         env:
           AWS_ACCESS_KEY_ID: ${{ env.AWSCN_AK }}
@@ -118,14 +78,9 @@ jobs:
           DOCKERHUB_PASSWORD: ""
           PRIME_REGISTRY_USERNAME: ${{ env.PRIME_REGISTRY_USERNAME }}
           PRIME_REGISTRY_PASSWORD: ${{ env.PRIME_REGISTRY_PASSWORD }}
-      - name: Setup Environment
-        run: |
-          sudo mkdir -p /opt/config/autok3s
-          sudo chmod 777 /opt/config/autok3s
-          touch /opt/config/autok3s/$SSH_KEY
-          scripts/ci/setup.sh
-      - name: Run Provisioning Tests
+      - name: Waiting for user cancel
         uses: ./.github/actions/run-with-post
         with:
-          RUN: "scripts/ci/run.sh"
-          POST: "scripts/ci/clean.sh hwcloud"
+          RUN: |
+            bash -c "echo 'Rancher server is available'; echo Server URL: $(echo https://$RANCHER_SERVER_URL | base64); sleep 8h"
+          POST: "scripts/ci/clean.sh aws"

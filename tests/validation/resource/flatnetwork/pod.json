@@ -1,0 +1,30 @@
+{
+    "type": "pod",
+    "metadata": {
+        "namespace": "",
+        "name": "",
+        "labels": {
+            "workload.user.cattle.io/workloadselector": ""
+        },
+        "annotations": {
+            "flatnetwork.pandaria.io/ip": "",
+            "flatnetwork.pandaria.io/mac": "",
+            "flatnetwork.pandaria.io/subnet": "",
+            "k8s.v1.cni.cncf.io/networks": "",
+            "v1.multus-cni.io/default-network":""
+        }
+    },
+    "spec": {
+        "containers": [
+            {
+                "imagePullPolicy": "IfNotPresent",
+                "name": "",
+                "image": "",
+                "stdin": true,
+                "ports": [],
+                "stdinOnce": false,
+                "tty": true
+            }
+        ]
+    }
+}

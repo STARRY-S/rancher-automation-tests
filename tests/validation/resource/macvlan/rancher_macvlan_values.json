@@ -1,0 +1,38 @@
+{
+    "charts": [
+        {
+            "annotations": {
+                "catalog.cattle.io/ui-source-repo": "pandaria-catalog",
+                "catalog.cattle.io/ui-source-repo-type": "cluster"
+            },
+            "chartName": "rancher-macvlan",
+            "releaseName": "rancher-macvlan",
+            "values": {
+                "clusterType": "K3s",
+                "multus": {
+                    "cniVersion": "1.0.0"
+                },
+                "global": {
+                    "cattle": {
+                        "clusterId": "",
+                        "clusterName": "",
+                        "rkePathPrefix": "",
+                        "rkeWindowsPathPrefix": "",
+                        "systemDefaultRegistry": "",
+                        "systemProjectId": "",
+                        "url": ""
+                    },
+                    "systemDefaultRegistry": ""
+                }
+            },
+            "version": "0.8.0"
+        }
+    ],
+    "disableOpenAPIValidation": false,
+    "namespace": "kube-system",
+    "noHooks": false,
+    "projectId": "",
+    "skipCRDs": false,
+    "timeout": "600s",
+    "wait": true
+}

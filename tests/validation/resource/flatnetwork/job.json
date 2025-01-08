@@ -1,0 +1,37 @@
+{
+    "type": "batch/job",
+    "metadata": {
+        "namespace": "",
+        "name": ""
+    },
+    "spec": {
+        "template": {
+            "spec": {
+                "restartPolicy": "Never",
+                "containers": [
+                    {
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "",
+                        "image": "",
+                        "command": [
+                            "/bin/sh"
+                        ],
+                        "args": [
+                            "-c",
+                            "sleep 100"
+                        ]
+                    }
+                ]
+            },
+            "metadata": {
+                "annotations": {
+                    "flatnetwork.pandaria.io/ip": "",
+                    "flatnetwork.pandaria.io/mac": "",
+                    "flatnetwork.pandaria.io/subnet": "",
+                    "k8s.v1.cni.cncf.io/networks": "",
+                    "v1.multus-cni.io/default-network":""
+                }
+            }
+        }
+    }
+}

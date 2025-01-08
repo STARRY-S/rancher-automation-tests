@@ -1,0 +1,51 @@
+{
+    "type": "apps.deployment",
+    "metadata": {
+        "namespace": "",
+        "name": ""
+    },
+    "spec": {
+        "replicas": 1,
+        "template": {
+            "spec": {
+                "containers": [
+                    {
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "",
+                        "image": "",
+                        "ports": [],
+                        "stdin": true,
+                        "stdinOnce": false,
+                        "tty": true
+                    }
+                ]
+            },
+            "metadata": {
+                "annotations": {
+                    "flatnetwork.pandaria.io/ip": "",
+                    "flatnetwork.pandaria.io/mac": "",
+                    "flatnetwork.pandaria.io/subnet": "",
+                    "k8s.v1.cni.cncf.io/networks": "",
+                    "v1.multus-cni.io/default-network":""
+                },
+                "labels": {
+                    "workload.user.cattle.io/workloadselector": ""
+                }
+            }
+        },
+        "selector": {
+            "matchLabels": {
+                "workload.user.cattle.io/workloadselector": ""
+            }
+        },
+        "strategy": {
+            "rollingUpdate": {
+                "maxSurge": 0,
+                "maxUnavailable": "25%"
+            },
+            "type": "RollingUpdate"
+        },
+        "minReadySeconds": 0,
+        "revisionHistoryLimit": 10
+    }
+}

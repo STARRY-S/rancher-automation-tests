@@ -16,5 +16,5 @@ for CASE in ${TEST_CASE[@]}; do
 done
 
 if [[ ! -z "$failed" ]]; then
-    echo "Some tests failed, please cleanup resources manually!" >&2
+    echo "Some tests failed." >&2
 fi
