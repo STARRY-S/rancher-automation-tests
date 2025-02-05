@@ -1,0 +1,44 @@
+name: Daily Check
+
+on:
+  schedule:
+    # min hour day month week
+    - cron: '30 11 * * *' # Run on 19:30(UTC+8) every day
+  # TODO: Uncomment following lines to trigger on push event
+  push:
+    branches: []
+
+env:
+  # AWSCN (China)
+  AWSCN_AK: ${{ secrets.AWSCN_AK }}
+  AWSCN_SK: ${{ secrets.AWSCN_SK }}
+  AWSCN_REGION: "cn-northwest-1"
+  AWS_AK: ${{ secrets.AWSCN_AK }}
+  AWS_SK: ${{ secrets.AWSCN_SK }}
+  AWS_REGION: "ap-northwest-1"
+
+  # HWCloud
+  HUAWEI_ACCESS_KEY: ${{ secrets.HUAWEI_ACCESS_KEY }}
+  HUAWEI_SECRET_KEY: ${{ secrets.HUAWEI_SECRET_KEY }}
+  HUAWEI_PROJECT_ID: ${{ secrets.HUAWEI_PROJECT_ID }}
+  HUAWEI_REGION_ID: ${{ secrets.HUAWEI_REGION_ID }}
+
+  # Tencent cloud
+  TENCENT_ACCESS_KEY_ID: ${{ secrets.TENCENT_ACCESS_KEY_ID }}
+  TENCENT_ACCESS_KEY_SECRET: ${{ secrets.TENCENT_ACCESS_KEY_SECRET }}
+
+  # TODO: Aliyun Cloud
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.x
+      - name: Run Check
+        run: |
+          scripts/ci/check.sh
