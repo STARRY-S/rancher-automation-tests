@@ -11,7 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.60
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.203.1
 	github.com/aws/aws-sdk-go-v2/service/eks v1.58.1
-	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.127
+	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.137
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1103
@@ -40,7 +40,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
-	go.mongodb.org/mongo-driver v1.12.0 // indirect
+	go.mongodb.org/mongo-driver v1.13.1 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
