@@ -19,7 +19,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1103
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1103
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1103
-	golang.org/x/term v0.27.0
+	golang.org/x/term v0.29.0
 )
 
 require (
@@ -42,7 +42,7 @@ require (
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	go.mongodb.org/mongo-driver v1.13.1 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
