@@ -13,7 +13,7 @@ CLOUDS=(
     "aws"
     "awscn"
     "hwcloud"
-    # "tencent" # TODO: add tencent support
+    "tencent"
     # "aliyun" # TODO: add aliyun support
 )
 
@@ -37,6 +37,7 @@ for CLOUD in ${CLOUDS[@]}; do
         --filter="auto-aws-" \
         --filter="starry" \
         --filter="eip" \
+        --filter="rancher" \
         --output="remain-resources.txt" \
         --auto-yes
 

@@ -4,9 +4,7 @@ on:
   schedule:
     # min hour day month week
     - cron: '30 11 * * *' # Run on 19:30(UTC+8) every day
-  # TODO: Uncomment following lines to trigger on push event
-  push:
-    branches: []
+  workflow_dispatch:
 
 env:
   # AWSCN (China)
@@ -26,6 +24,7 @@ env:
   # Tencent cloud
   TENCENT_ACCESS_KEY_ID: ${{ secrets.TENCENT_ACCESS_KEY_ID }}
   TENCENT_ACCESS_KEY_SECRET: ${{ secrets.TENCENT_ACCESS_KEY_SECRET }}
+  TENCENT_REGION: "ap-guangzhou"
 
   # TODO: Aliyun Cloud
 
