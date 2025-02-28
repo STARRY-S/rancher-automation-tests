@@ -22,7 +22,7 @@ for CLOUD in ${CLOUDS[@]}; do
     if [[ $CLOUD = "aws" ]]; then
         export AWS_AK="$AWS_AK"
         export AWS_SK="$AWS_SK"
-        export AWS_REGION="$AWSCN_REGION"
+        export AWS_REGION="$AWS_REGION"
     elif [[ $CLOUD = "awscn" ]]; then
         export AWS_AK="$AWSCN_AK"
         export AWS_SK="$AWSCN_SK"
