@@ -43,11 +43,11 @@
                         "clusterName": "",
                         "rkePathPrefix": "",
                         "rkeWindowsPathPrefix": "",
-                        "systemDefaultRegistry": "",
+                        "systemDefaultRegistry": "registry.rancher.cn",
                         "systemProjectId": "",
                         "url": ""
                     },
-                    "systemDefaultRegistry": ""
+                    "systemDefaultRegistry": "registry.rancher.cn"
                 }
             },
             "version": "0.1.0"
