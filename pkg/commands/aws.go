@@ -16,6 +16,9 @@ const (
 type awsCmd struct {
 	*baseCmd
 
+	checkEKS  bool
+	checckEC2 bool
+
 	clean   bool
 	filters []string
 	output  string
@@ -50,6 +53,8 @@ func newAwsCmd() *awsCmd {
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
 	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
 	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
+	flags.BoolVarP(&cc.checckEC2, "check-ec2", "", true, "check EC2 instances")
+	flags.BoolVarP(&cc.checkEKS, "check-eks", "", true, "check EKS clusters")
 	flags.BoolVarP(&cc.autoYes, "auto-yes", "y", false, "auto yes")
 	flags.StringVarP(&cc.ak, "ak", "", "", "aws cloud access key (env '"+ENV_AWS_AK+"')")
 	flags.StringVarP(&cc.sk, "sk", "", "", "aws cloud secret key (env '"+ENV_AWS_SK+"')")
@@ -68,6 +73,9 @@ func (cc *awsCmd) prepareProviders() (provider.Providers, error) {
 	p, err := aws.NewProvider(&aws.Options{
 		Filters: cc.filters,
 		Clean:   cc.clean,
+
+		CheckEC2: cc.checckEC2,
+		CheckEKS: cc.checkEKS,
 
 		AccessKey: cc.ak,
 		SecretKey: cc.sk,

@@ -16,6 +16,10 @@ const (
 type hwcloudCmd struct {
 	*baseCmd
 
+	checkCCE bool
+	checkECS bool
+	checkEIP bool
+
 	clean     bool
 	filters   []string
 	output    string
@@ -50,6 +54,9 @@ func newHwcloudCmd() *hwcloudCmd {
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
 	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
 	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
+	flags.BoolVarP(&cc.checkCCE, "check-cce", "", true, "check CCE cluster")
+	flags.BoolVarP(&cc.checkECS, "check-ecs", "", true, "check ECS instances")
+	flags.BoolVarP(&cc.checkEIP, "check-eip", "", true, "check EIP resources")
 	flags.BoolVarP(&cc.autoYes, "auto-yes", "y", false, "auto yes")
 	flags.StringVarP(&cc.ak, "ak", "", "", "huawei cloud access key ID (env '"+ENV_HUAWEI_ACCESS_KEY+"')")
 	flags.StringVarP(&cc.sk, "sk", "", "", "huawei cloud secret key (env '"+ENV_HUAWEI_SECRET_KEY+"')")
@@ -68,6 +75,10 @@ func (cc *hwcloudCmd) prepareProviders() (provider.Providers, error) {
 	p, err := hwcloud.NewProvider(&hwcloud.Options{
 		Filters: cc.filters,
 		Clean:   cc.clean,
+
+		CheckCCE: cc.checkCCE,
+		CheckECS: cc.checkECS,
+		CheckEIP: cc.checkEIP,
 
 		AccessKey: cc.ak,
 		SecretKey: cc.sk,

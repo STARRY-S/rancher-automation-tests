@@ -20,9 +20,11 @@ type provider struct {
 	filters []string
 	clean   bool
 
-	cfg       aws.Config
-	ec2Client *ec2.Client
-	eksClient *eks.Client
+	cfg          aws.Config
+	ec2Client    *ec2.Client
+	needCheckEC2 bool
+	eksClient    *eks.Client
+	needCheckEKS bool
 
 	unclean bool
 	reports []string
@@ -46,6 +48,10 @@ func (p *provider) Check(ctx context.Context) error {
 }
 
 func (p *provider) checkEC2(ctx context.Context) error {
+	if !p.needCheckEC2 {
+		logrus.Infof("Skip check %v EC2", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -104,6 +110,10 @@ func (p *provider) checkEC2(ctx context.Context) error {
 }
 
 func (p *provider) checkEKS(ctx context.Context) error {
+	if !p.needCheckEKS {
+		logrus.Infof("Skip check %v EKS", p.Name())
+		return nil
+	}
 	o, err := listClusters(ctx, p.eksClient)
 	if err != nil {
 		return fmt.Errorf("failed to listClusters: %w", err)
@@ -137,6 +147,9 @@ type Options struct {
 	Filters []string
 	Clean   bool
 
+	CheckEC2 bool
+	CheckEKS bool
+
 	AccessKey string
 	SecretKey string
 	Token     string
@@ -157,9 +170,11 @@ func NewProvider(o *Options) (*provider, error) {
 		filters: slices.Clone(o.Filters),
 		clean:   o.Clean,
 
-		cfg:       config,
-		ec2Client: newEc2Client(config),
-		eksClient: newEksClient(config),
-		reports:   make([]string, 0),
+		cfg:          config,
+		ec2Client:    newEc2Client(config),
+		needCheckEC2: o.CheckEC2,
+		eksClient:    newEksClient(config),
+		needCheckEKS: o.CheckEKS,
+		reports:      make([]string, 0),
 	}, nil
 }

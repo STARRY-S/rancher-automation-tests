@@ -17,10 +17,13 @@ type provider struct {
 	filters []string
 	clean   bool
 
-	clientAuth *ClientAuth
-	cceClient  *cce.CceClient
-	ecsCliet   *ecs.EcsClient
-	eipClient  *eip.EipClient
+	clientAuth   *ClientAuth
+	cceClient    *cce.CceClient
+	needCheckCCE bool
+	ecsCliet     *ecs.EcsClient
+	needCheckECS bool
+	eipClient    *eip.EipClient
+	needCheckEIP bool
 
 	unclean bool
 	reports []string
@@ -46,6 +49,10 @@ func (p *provider) Check(ctx context.Context) error {
 }
 
 func (p *provider) checkCCE(ctx context.Context) error {
+	if !p.needCheckCCE {
+		logrus.Infof("Skip check %v CCE", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -88,6 +95,10 @@ func (p *provider) checkCCE(ctx context.Context) error {
 }
 
 func (p *provider) checkECS(ctx context.Context) error {
+	if !p.needCheckECS {
+		logrus.Infof("Skip check %v ECS", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -128,6 +139,10 @@ func (p *provider) checkECS(ctx context.Context) error {
 }
 
 func (p *provider) checkEIP(ctx context.Context) error {
+	if !p.needCheckEIP {
+		logrus.Infof("Skip check %v IP", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -169,6 +184,10 @@ type Options struct {
 	Filters []string
 	Clean   bool
 
+	CheckCCE bool
+	CheckECS bool
+	CheckEIP bool
+
 	AccessKey string
 	SecretKey string
 	ProjectID string
@@ -196,6 +215,10 @@ func NewProvider(o *Options) (*provider, error) {
 	return &provider{
 		filters: slices.Clone(o.Filters),
 		clean:   o.Clean,
+
+		needCheckCCE: o.CheckCCE,
+		needCheckECS: o.CheckECS,
+		needCheckEIP: o.CheckEIP,
 
 		clientAuth: c,
 		cceClient:  cceClient,

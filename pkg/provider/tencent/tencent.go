@@ -19,6 +19,11 @@ type provider struct {
 	clean      bool
 	clientAuth *ClientAuth
 
+	needCheckCVM   bool
+	needCheckCBS   bool
+	needCheckEIP   bool
+	needCheckEKSCI bool
+
 	cvmClient *cvmapi.Client
 	tkeClient *tkeapi.Client
 	cbsClient *cbsapi.Client
@@ -51,6 +56,10 @@ func (p *provider) Check(ctx context.Context) error {
 }
 
 func (p *provider) checkCVM(ctx context.Context) error {
+	if !p.needCheckCVM {
+		logrus.Infof("Skip check %v CVM", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -85,6 +94,10 @@ func (p *provider) checkCVM(ctx context.Context) error {
 }
 
 func (p *provider) checkEIP(ctx context.Context) error {
+	if !p.needCheckEIP {
+		logrus.Infof("Skip check %v EIP", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -118,6 +131,10 @@ func (p *provider) checkEIP(ctx context.Context) error {
 }
 
 func (p *provider) checkEKSCI(ctx context.Context) error {
+	if !p.needCheckEKSCI {
+		logrus.Infof("Skip check %v EKSCI", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -151,6 +168,10 @@ func (p *provider) checkEKSCI(ctx context.Context) error {
 }
 
 func (p *provider) checkCBS(ctx context.Context) error {
+	if !p.needCheckCBS {
+		logrus.Infof("Skip check %v CBS", p.Name())
+		return nil
+	}
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -195,6 +216,12 @@ type Options struct {
 	Filters []string
 	Clean   bool
 
+	CheckCVM   bool
+	CheckTKE   bool
+	CheckCBS   bool
+	CheckEIP   bool
+	CheckEKSCI bool
+
 	AccessKey string
 	SecretKey string
 	Region    string
@@ -226,6 +253,11 @@ func NewProvider(o *Options) (*provider, error) {
 	return &provider{
 		filters: slices.Clone(o.Filters),
 		clean:   o.Clean,
+
+		needCheckCVM:   o.CheckCVM,
+		needCheckCBS:   o.CheckCBS,
+		needCheckEIP:   o.CheckEIP,
+		needCheckEKSCI: o.CheckEKSCI,
 
 		clientAuth: c,
 		cvmClient:  cvmClient,

@@ -19,10 +19,12 @@ CLOUDS=(
 
 for CLOUD in ${CLOUDS[@]}; do
     PROVIDER=$CLOUD
+    EXTRA_OPTIONS=""
     if [[ $CLOUD = "aws" ]]; then
         export AWS_AK="$AWS_AK"
         export AWS_SK="$AWS_SK"
         export AWS_REGION="$AWS_REGION"
+        EXTRA_OPTIONS="--check-eks=false"
     elif [[ $CLOUD = "awscn" ]]; then
         export AWS_AK="$AWSCN_AK"
         export AWS_SK="$AWSCN_SK"
@@ -31,6 +33,7 @@ for CLOUD in ${CLOUDS[@]}; do
     fi
 
     echo "Checking resources of cloud [$CLOUD]"
+    set -x
     ./checker $PROVIDER \
         --filter="auto-rancher-" \
         --filter="oetest" \
@@ -39,7 +42,8 @@ for CLOUD in ${CLOUDS[@]}; do
         --filter="eip" \
         --filter="rancher" \
         --output="remain-resources.txt" \
-        --auto-yes
+        --auto-yes $EXTRA_OPTIONS
+    set +x
 
     if [[ -e "remain-resources.txt" ]]; then
         echo "-----------------------------"
