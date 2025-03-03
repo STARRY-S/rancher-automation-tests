@@ -147,6 +147,7 @@ func NewProvider(o *Options) (*provider, error) {
 	config, err := config.LoadDefaultConfig(context.TODO(),
 		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(
 			o.AccessKey, o.SecretKey, o.Token)),
+		config.WithRegion(o.Region),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load aws config: %w", err)

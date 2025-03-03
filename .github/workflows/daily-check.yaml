@@ -13,7 +13,7 @@ env:
   AWSCN_REGION: "cn-northwest-1"
   AWS_AK: ${{ secrets.AWS_AK }}
   AWS_SK: ${{ secrets.AWS_SK }}
-  AWS_REGION: "ap-northwest-1"
+  AWS_REGION: "ap-northeast-3"
 
   # HWCloud
   HUAWEI_ACCESS_KEY: ${{ secrets.HUAWEI_ACCESS_KEY }}
