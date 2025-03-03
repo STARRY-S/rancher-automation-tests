@@ -11,7 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.61
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.206.0
 	github.com/aws/aws-sdk-go-v2/service/eks v1.60.0
-	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.137
+	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.138
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.9.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1111
