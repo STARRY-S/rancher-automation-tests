@@ -19,10 +19,14 @@ on:
         required: true
         default: |
           macvlan/test-macvlan flatnetwork/test-flatnetwork
+      SLEEP_TIME:
+        description: "Sleep time"
+        required: false
+        default: '10'
       ENVS:
         description: 'Other envs for tests, separated by white spaces (Ex. ENV1=AAA ENV2=BBB)'
         required: false
-        default: ''
+        default: 'SLEEP_TIME=10'
 
 env:
   # ENV defined by workflow dispatch inputs
@@ -31,6 +35,7 @@ env:
   RPM_LOCAL_NAME: ${{ github.event.inputs.RPM_LOCAL_NAME }}
   TEST_CASE: ${{ github.event.inputs.TEST_CASE }}
   INPUT_ENVS: ${{ github.event.inputs.ENVS }}
+  SLEEP_TIME: ${{ github.event.inputs.SLEEP_TIME }}
 
   # ENV from secrets
   ADMIN_PWD: ${{ secrets.ADMIN_PWD }}       # Rancher password
@@ -96,5 +101,5 @@ jobs:
           POST: "scripts/ci/clean.sh aws"
       - name: SLEEP
         run: |
-          echo "Sleep 3 hours for manual checks"
-          sleep 3h
+          echo "Sleep for manual checks"
+          sleep ${{ env.SLEEP_TIME }}
