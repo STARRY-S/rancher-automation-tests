@@ -7,28 +7,27 @@ get_provider_args() {
     local AUTOK3S_CONTEXT=${AUTOK3S_REGION}.${AUTOK3S_PROVIDER}
     case ${AUTOK3S_PROVIDER} in
         aws)
-            AUTOK3S_CONTEXT=${AUTOK3S_REGION}.aws
-            AUTOK3S_CREATE_ARGS="--keypair-name ${SSH_KEY_PAIR} --ami ${AUTOK3S_AMI} \
-                --instance-type ${AUTOK3S_INSTANCE_TYPE} \
-                --region ${AUTOK3S_REGION} --request-spot-instance \
-                --root-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
-                --volume-type ${AUTOK3S_VOLUME_TYPE} \
-                --vpc-id ${AUTOK3S_VPC} --zone ${AUTOK3S_ZONE} \
-                --system-default-registry=docker.io \
-                --user-data-path /tmp/userdata.sh"
-            ;;
-        awscn)
-            AUTOK3S_CONTEXT=${AUTOK3S_REGION}.aws
-            AUTOK3S_CREATE_ARGS="--keypair-name ${SSH_KEY_PAIR} --ami ${AUTOK3S_AMI} \
-                --instance-type ${AUTOK3S_INSTANCE_TYPE} \
-                --region ${AUTOK3S_REGION} --request-spot-instance \
-                --root-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
-                --volume-type ${AUTOK3S_VOLUME_TYPE} \
-                --vpc-id ${AUTOK3S_VPC} --zone ${AUTOK3S_ZONE} \
-                --k3s-install-script="https://rancher-mirror.rancher.cn/k3s/k3s-install.sh" \
-                --system-default-registry=registry.rancher.cn \
-                --install-env "INSTALL_K3S_MIRROR=cn" \
-                --user-data-path /tmp/userdata.sh"
+            if [[ $AUTOK3S_REGION = *cn* ]]; then
+                AUTOK3S_CREATE_ARGS="--keypair-name ${SSH_KEY_PAIR} --ami ${AUTOK3S_AMI} \
+                    --instance-type ${AUTOK3S_INSTANCE_TYPE} \
+                    --region ${AUTOK3S_REGION} --request-spot-instance \
+                    --root-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
+                    --volume-type ${AUTOK3S_VOLUME_TYPE} \
+                    --vpc-id ${AUTOK3S_VPC} --zone ${AUTOK3S_ZONE} \
+                    --k3s-install-script="https://rancher-mirror.rancher.cn/k3s/k3s-install.sh" \
+                    --system-default-registry=registry.rancher.cn \
+                    --install-env "INSTALL_K3S_MIRROR=cn" \
+                    --user-data-path /tmp/userdata.sh"
+            else
+                AUTOK3S_CREATE_ARGS="--keypair-name ${SSH_KEY_PAIR} --ami ${AUTOK3S_AMI} \
+                    --instance-type ${AUTOK3S_INSTANCE_TYPE} \
+                    --region ${AUTOK3S_REGION} --request-spot-instance \
+                    --root-size 50 --security-group ${AUTOK3S_SECURITY_GROUP} \
+                    --volume-type ${AUTOK3S_VOLUME_TYPE} \
+                    --vpc-id ${AUTOK3S_VPC} --zone ${AUTOK3S_ZONE} \
+                    --system-default-registry=docker.io \
+                    --user-data-path /tmp/userdata.sh"
+            fi
             ;;
         tencent)
             export CVM_SECRET_ID=${TENCENT_ACCESS_KEY_ID}
@@ -146,9 +145,6 @@ EOT
 
 wait_rpm_server_ready() {
     local AUTOK3S_CONTEXT=${AUTOK3S_REGION}.${AUTOK3S_PROVIDER}
-    if [[ $AUTOK3S_PROVIDER = awscn ]]; then
-        AUTOK3S_CONTEXT=${AUTOK3S_REGION}.aws
-    fi
     autok3s kubectl config use-context ${RPM_LOCAL_NAME}.${AUTOK3S_CONTEXT}
 
     # Wait for rancher server

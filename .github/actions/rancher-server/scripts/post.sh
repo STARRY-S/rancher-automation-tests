@@ -17,10 +17,6 @@ if [[ -e autok3s_log.txt ]]; then
 fi
 
 echo "Cleanup cluster: $RPM_LOCAL_NAME"
-PROVIDER=$AUTOK3S_PROVIDER
-if [[ $PROVIDER = awscn ]]; then
-    PROVIDER=aws
-fi
-autok3s delete -p ${PROVIDER} -n ${RPM_LOCAL_NAME} -f
+autok3s delete -p ${AUTOK3S_PROVIDER} -n ${RPM_LOCAL_NAME} -f
 
 echo "post: Done"

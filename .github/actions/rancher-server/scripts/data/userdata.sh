@@ -30,6 +30,11 @@ case $AUTOK3S_PROVIDER in
     SYSTEM_DEFAULT_REGISTRY="registry.rancher.cn"
     RANCHER_IMAGE='registry.rancher.cn/prime/rancher'
     ;;
+  awscn)
+    HOST_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+    SYSTEM_DEFAULT_REGISTRY="registry.rancher.cn"
+    RANCHER_IMAGE='registry.rancher.cn/prime/rancher'
+    ;;
   alibaba)
     HOST_IP=$(curl -s http://100.100.100.200/latest/meta-data/public-ipv4)
     SYSTEM_DEFAULT_REGISTRY="registry.rancher.cn"

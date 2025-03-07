@@ -64,7 +64,7 @@ jobs:
           SSH_SECRET_KEY: ${{ secrets.SSH_SECRET_KEY }}
           RPM_LOCAL_NAME: ${{ env.RPM_LOCAL_NAME }}
           AUTOK3S_VERSION: "v0.9.3"
-          AUTOK3S_PROVIDER: "awscn"
+          AUTOK3S_PROVIDER: "aws"
           AUTOK3S_SSH_USER: "ubuntu"
           AUTOK3S_AMI: "ami-063dbdfa885edce48"
           AUTOK3S_INSTANCE_TYPE: "t3a.large"
