@@ -17,8 +17,12 @@ prepare_environment;
 # Get autoK3s Provider Args
 get_provider_args;
 
+PROVIDER=$AUTOK3S_PROVIDER
+if [[ $PROVIDER = awscn ]]; then
+    PROVIDER=aws
+fi
 # Create Rancher Prime local cluster server
-autok3s create --provider ${AUTOK3S_PROVIDER} \
+autok3s create --provider ${PROVIDER} \
     --name ${RPM_LOCAL_NAME} \
     --master 1 \
     --k3s-version ${K3S_VERSION} \
