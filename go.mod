@@ -14,11 +14,11 @@ require (
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.138
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.9.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1111
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1111
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1111
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1111
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1111
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1115
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1117
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1117
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1117
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1116
 	golang.org/x/term v0.29.0
 )
 
