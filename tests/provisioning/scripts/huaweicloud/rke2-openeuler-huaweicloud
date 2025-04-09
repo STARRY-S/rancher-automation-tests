@@ -41,13 +41,13 @@ huaweiECSConfigs:
   huaweiProjectID: "${HUAWEI_PROJECT_ID}"
   region: "${HUAWEI_REGION_ID}"
   ecsConfig:
-    - imageRef: "4ac84693-49d6-459b-a15f-264b405939df" # openEuler-24.03-LTS-arm64-20240628
-      # kc2.xlarge.2 4c8g
-      flavorRef: "kc2.xlarge.2"
+    - imageRef: "bc0f7a41-6579-423b-b3d2-b6cf3846b0e3" # openEuler-24.03-LTS-SP1-arm64
+      # kc1.xlarge.2 4c8g
+      flavorRef: "kc1.xlarge.2"
       sshUser: "openeuler"
       keyName: "${SSH_KEY}" # {HOME}/.ssh/{SSH_KEY}
-      vpcID: "42231883-e158-4a2f-b625-20cdb435d4b0"
-      subnetID: "c93c0d9b-0b30-46ab-bd04-7c2df88fd5ea"
+      vpcID: "68c4b19c-6d7f-4f7f-9842-1b62f38a0f25"
+      subnetID: "2987cf41-13c0-42a7-9809-194410232d0a"
       eipType: "5_bgp"
       bandwidthSize: 50 # Both download & upload bandwith to 50Mbit
       bandwidthShareType: "PER"
@@ -57,7 +57,7 @@ huaweiECSConfigs:
       dataVolumeSize: 10
       dataVolumeType: "SSD"
       securityGroups:
-        - "c241ea61-8ce2-48ba-a9e4-0f38a17a97d3" # all-open
+        - "631596f0-b8d2-4dc4-875d-48c0188f0d85" # all-open
       # Use cloud-init to install docker
       userData: "IyEvYmluL2Jhc2gKCnNldCAtZXh1byBwaXBlZmFpbAoKY2QgL3RtcAoKQVJDSD0iJCh1bmFtZSAtbSkiCndoaWxlIFtbICEgLWUgImluc3RhbGwtZG9ja2VyLnNoIiBdXTsgZG8KICAgIHdnZXQgLS10aW1lb3V0PTEyMCAiaHR0cHM6Ly9zdGFycnktdGVzdC5vYnMuY24tZWFzdC0zLm15aHVhd2VpY2xvdWQuY29tL2RvY2tlci9pbnN0YWxsLWRvY2tlci5zaCIgfHwgdHJ1ZQogICAgc2xlZXAgMQpkb25lCndoaWxlIFtbICEgLWUgImNvbnRhaW5lcmQudGFyLmd6IiBdXTsgZG8KICAgIHdnZXQgLS10aW1lb3V0PTEyMCAiaHR0cHM6Ly9zdGFycnktdGVzdC5vYnMuY24tZWFzdC0zLm15aHVhd2VpY2xvdWQuY29tL2RvY2tlci8ke0FSQ0h9L2NvbnRhaW5lcmQudGFyLmd6IiB8fCB0cnVlCiAgICBzbGVlcCAxCmRvbmUKd2hpbGUgW1sgISAtZSAiZG9ja2VyLnRhci5neiIgXV07IGRvCiAgICB3Z2V0IC0tdGltZW91dD0xMjAgImh0dHBzOi8vc3RhcnJ5LXRlc3Qub2JzLmNuLWVhc3QtMy5teWh1YXdlaWNsb3VkLmNvbS9kb2NrZXIvJHtBUkNIfS9kb2NrZXIudGFyLmd6IiB8fCB0cnVlCiAgICBzbGVlcCAxCmRvbmUKCmNobW9kICt4IGluc3RhbGwtZG9ja2VyLnNoCm1rZGlyIC1wIC9ldGMvZG9ja2VyCmVjaG8gJ3sKICAgICJyZWdpc3RyeS1taXJyb3JzIjogWwogICAgICAgICJodHRwczovL3JlZ2lzdHJ5LnJhbmNoZXIuY24iCiAgICBdCn0nID4gL2V0Yy9kb2NrZXIvZGFlbW9uLmpzb24KCmJhc2ggLi9pbnN0YWxsLWRvY2tlci5zaAoKdXNlcm1vZCAtYUcgZG9ja2VyIG9wZW5ldWxlcgo="
       roles:

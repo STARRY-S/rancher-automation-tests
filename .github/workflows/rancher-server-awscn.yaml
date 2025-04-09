@@ -5,11 +5,11 @@ on:
     inputs:
       RPM_VERSION:
         description: 'Rancher Version (Ex. v2.10.0-ent-rcX)'
-        default: 'v2.10.1-ent-rc3'
+        default: 'v2.10.4-ent-rc1'
         required: true
       K3S_VERSION:
         description: 'K3s version for Rancher Local Cluster'
-        default: 'v1.29.11+k3s1'
+        default: 'v1.29.15+k3s1'
         required: true
       RPM_LOCAL_NAME:
         description: 'Rancher local cluster name, for run multiple tests'
@@ -52,7 +52,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.23.x
+          go-version: 1.24.x
       - name: Rancher Server
         uses: ./.github/actions/rancher-server
         env:

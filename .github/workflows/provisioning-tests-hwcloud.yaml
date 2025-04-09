@@ -5,11 +5,11 @@ on:
     inputs:
       RPM_VERSION:
         description: 'Rancher Version (Ex. v2.10.0-ent-rcX)'
-        default: 'v2.10.3-ent-rc1'
+        default: 'v2.10.4-ent-rc1'
         required: true
       K3S_VERSION:
         description: 'K3s version for Rancher Local Cluster'
-        default: 'v1.31.5+k3s1'
+        default: 'v1.31.7+k3s1'
         required: true
       RPM_LOCAL_NAME:
         description: 'Rancher local cluster name, for run multiple tests'
@@ -23,15 +23,15 @@ on:
         description: 'Downstream cluster versions, separated by white spaces (Ex. v1.24.11+k3s1 v1.24.11+rke2r1)'
         required: true
         default: |
-          v1.29.13+rke2r1
-            v1.30.9+rke2r1
-            v1.31.5+rke2r1
-            v1.29.13+k3s1
-            v1.30.9+k3s1
-            v1.31.5+k3s1
-            v1.29.13-rancher1-1
-            v1.30.9-rancher1-1
-            v1.31.5-rancher1-1
+          v1.29.15+rke2r1
+            v1.30.11+rke2r1
+            v1.31.7+rke2r1
+            v1.29.15+k3s1
+            v1.30.11+k3s1
+            v1.31.7+k3s1
+            v1.29.15-rancher1-1
+            v1.30.11-rancher1-1
+            v1.31.7-rancher1-1
       RANCHER_CODE_REPO:
         description: 'GitHub Repo of rancher'
         required: true
@@ -89,7 +89,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.23.x
+          go-version: 1.24.x
       - name: Rancher Server on AWS CN
         uses: ./.github/actions/rancher-server
         env:
