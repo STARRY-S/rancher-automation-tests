@@ -82,5 +82,5 @@ jobs:
         uses: ./.github/actions/run-with-post
         with:
           RUN: |
-            bash -c "echo 'Rancher server is available'; echo Server URL: $(echo https://$RANCHER_SERVER_URL | base64); sleep 8h"
+            sleep 8h"
           POST: "scripts/ci/clean.sh aws"

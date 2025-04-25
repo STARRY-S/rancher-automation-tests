@@ -39,4 +39,7 @@ get_rpm_config;
 echo "RANCHER_SERVER_URL=$RANCHER_SERVER_URL" >> $GITHUB_ENV
 echo "RANCHER_SERVER_TOKEN=$RANCHER_SERVER_TOKEN" >> $GITHUB_ENV
 
+echo "::add-mask::$RANCHER_SERVER_URL"
+echo "::add-mask::$RANCHER_SERVER_TOKEN"
+
 echo "rancher-server: Done"
