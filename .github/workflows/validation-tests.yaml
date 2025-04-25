@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       RPM_VERSION:
-        description: 'Rancher Version (Ex. v2.10.0-ent-rcX)'
-        default: 'v2.10.4-ent-rc1'
+        description: 'Rancher Version (Ex. v2.11.0-ent-rcX)'
+        default: 'v2.11.0-ent-rc2'
         required: true
       K3S_VERSION:
         description: 'K3s version for Rancher Local Cluster'
@@ -22,11 +22,11 @@ on:
       SLEEP_TIME:
         description: "Sleep time"
         required: false
-        default: '10'
+        default: '1s'
       ENVS:
         description: 'Other envs for tests, separated by white spaces (Ex. ENV1=AAA ENV2=BBB)'
         required: false
-        default: 'SLEEP_TIME=10'
+        default: 'FOO=BAR'
 
 env:
   # ENV defined by workflow dispatch inputs
