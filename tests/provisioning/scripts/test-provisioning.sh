@@ -18,3 +18,5 @@ done
 if [[ ! -z "$failed" ]]; then
     echo "Some tests failed." >&2
 fi
+
+echo "Provisioning test: DONE"

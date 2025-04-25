@@ -56,6 +56,7 @@ func (cc *checkerCmd) addCommands() {
 		newAwsCmd(),
 		newHwcloudCmd(),
 		newTencentCloudCmd(),
+		newWrapperCmd(),
 		newVersionCmd(),
 	)
 }
