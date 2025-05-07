@@ -24,4 +24,5 @@ if [[ ! -z "$failed" ]]; then
     echo "Some tests failed." >&2
 fi
 
-echo "validation test: Done"
+echo "Validation test: DONE"
+echo "WRAPPER_EOF"

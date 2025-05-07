@@ -90,6 +90,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.24.x
+      - name: Build
+        run: |
+          scripts/build.sh
       - name: Rancher Server on AWS CN
         uses: ./.github/actions/rancher-server
         env:
@@ -124,5 +127,5 @@ jobs:
       - name: Run Provisioning Tests
         uses: ./.github/actions/run-with-post
         with:
-          RUN: "scripts/ci/run.sh"
+          RUN: "scripts/ci/run-provisioning.sh"
           POST: "scripts/ci/clean.sh hwcloud"

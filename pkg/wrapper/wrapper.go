@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DefaultWrapperEOF = "WRAPPER_END_EOF"
+	DefaultWrapperEOF = "WRAPPER_EOF"
 )
 
 type Wrapper struct {

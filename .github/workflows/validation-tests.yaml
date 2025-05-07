@@ -97,7 +97,7 @@ jobs:
       - name: Run Validaton Tests
         uses: ./.github/actions/run-with-post
         with:
-          RUN: "tests/validation/scripts/test-validation.sh"
+          RUN: "scripts/ci/run-validation.sh"
           POST: "scripts/ci/clean.sh aws"
       - name: SLEEP
         run: |

@@ -20,3 +20,4 @@ if [[ ! -z "$failed" ]]; then
 fi
 
 echo "Provisioning test: DONE"
+echo "WRAPPER_EOF"

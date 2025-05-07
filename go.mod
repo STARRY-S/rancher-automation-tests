@@ -3,7 +3,7 @@ module github.com/STARRY-S/rancher-kev2-provisioning-tests
 go 1.24
 
 require (
-	github.com/antonfisher/nested-logrus-formatter v1.3.1
+	github.com/STARRY-S/simple-logrus-formatter v0.0.0-20250427025245-bdb535b56165
 	github.com/aws/aws-sdk-go-v2 v1.36.3
 	github.com/aws/aws-sdk-go-v2/config v1.29.14
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.67

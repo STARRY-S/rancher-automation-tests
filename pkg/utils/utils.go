@@ -8,18 +8,14 @@ import (
 	"os"
 	"strings"
 
-	nested "github.com/antonfisher/nested-logrus-formatter"
+	"github.com/STARRY-S/simple-logrus-formatter/pkg/formatter"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/writer"
 	"golang.org/x/term"
 )
 
 func SetupLogrus() {
-	formatter := &nested.Formatter{
-		HideKeys:        false,
-		TimestampFormat: "[15:04:05]", // hour, time, sec only
-		FieldsOrder:     []string{"Provider"},
-	}
+	formatter := &formatter.Formatter{}
 	if !term.IsTerminal(int(os.Stdin.Fd())) || !term.IsTerminal(int(os.Stderr.Fd())) {
 		// Disable if the output is not terminal.
 		formatter.NoColors = true
@@ -125,7 +121,7 @@ func MatchFilters(s string, filters []string) bool {
 		return false
 	}
 	for _, f := range filters {
-		if strings.IndexAny(s, f) >= 0 {
+		if strings.ContainsAny(s, f) {
 			return true
 		}
 	}
