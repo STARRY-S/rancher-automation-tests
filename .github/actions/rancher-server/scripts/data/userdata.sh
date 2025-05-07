@@ -68,7 +68,7 @@ metadata:
   name: cert-manager
 spec:
   targetNamespace: cert-manager
-  version: v1.11.0
+  version: v1.17.2
   chart: cert-manager
   repo: https://jetstack.hxstarrys.me
   set:
