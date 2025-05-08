@@ -66,6 +66,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.24.x
+      - name: Build
+        run: |
+          scripts/build.sh
       - name: Setup environment
         run: |
           ./tests/validation/scripts/prepare.sh

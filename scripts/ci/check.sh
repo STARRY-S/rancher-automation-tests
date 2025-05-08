@@ -36,7 +36,7 @@ for CLOUD in ${CLOUDS[@]}; do
     set -x
     ./checker $PROVIDER \
         --filter="auto-rancher-" \
-        --filter="oetest" \
+        --filter="oetest-" \
         --filter="auto-aws-" \
         --filter="starry" \
         --filter="eip" \
