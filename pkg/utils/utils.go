@@ -7,11 +7,17 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/STARRY-S/simple-logrus-formatter/pkg/formatter"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/writer"
 	"golang.org/x/term"
+)
+
+const (
+	// Sleep interval to avoid rate-limit.
+	DefaultInterval = time.Millisecond * 300
 )
 
 func SetupLogrus() {

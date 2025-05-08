@@ -2,7 +2,9 @@ package aws
 
 import (
 	"context"
+	"time"
 
+	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/sirupsen/logrus"
@@ -22,6 +24,7 @@ func describeInstances(
 		return nil, err
 
 	}
+	time.Sleep(utils.DefaultInterval)
 	return o, nil
 }
 
@@ -37,5 +40,6 @@ func terminateInstances(
 		logrus.Errorf("TerminateInstances failed: %v", err)
 		return nil, err
 	}
+	time.Sleep(utils.DefaultInterval)
 	return o, nil
 }

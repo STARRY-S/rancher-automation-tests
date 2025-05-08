@@ -2,7 +2,9 @@ package tencent
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	"github.com/sirupsen/logrus"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -34,5 +36,6 @@ func describeInstances(
 		logrus.Errorf("DescribeInstances failed: %v", err)
 		return nil, fmt.Errorf("describeInstances: %w", err)
 	}
+	time.Sleep(utils.DefaultInterval)
 	return response, nil
 }

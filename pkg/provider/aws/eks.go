@@ -2,7 +2,9 @@ package aws
 
 import (
 	"context"
+	"time"
 
+	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/sirupsen/logrus"
@@ -21,6 +23,7 @@ func listClusters(
 		logrus.Errorf("ListClusters failed: %v", err)
 		return nil, err
 	}
+	time.Sleep(utils.DefaultInterval)
 	return o, nil
 }
 
@@ -34,6 +37,7 @@ func deleteCluster(
 		logrus.Errorf("DeleteCluster failed: %v", err)
 		return nil, err
 	}
+	time.Sleep(utils.DefaultInterval)
 	return o, nil
 }
 
@@ -48,5 +52,6 @@ func deleteNodegroup(
 		logrus.Errorf("DeleteNodegroup failed: %v", err)
 		return nil, err
 	}
+	time.Sleep(utils.DefaultInterval)
 	return o, nil
 }

@@ -1,6 +1,9 @@
 package hwcloud
 
 import (
+	"time"
+
+	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	cce "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/cce/v3"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/cce/v3/model"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/cce/v3/region"
@@ -28,6 +31,7 @@ func listClusters(client *cce.CceClient) (*model.ListClustersResponse, error) {
 		logrus.Errorf("ListClusters failed: %v", err)
 		return nil, err
 	}
+	time.Sleep(utils.DefaultInterval)
 	return res, nil
 }
 
@@ -39,5 +43,6 @@ func deleteCluster(client *cce.CceClient, id string) (*model.DeleteClusterRespon
 		logrus.Errorf("DeleteCluster failed: %v", err)
 		return nil, err
 	}
+	time.Sleep(utils.DefaultInterval)
 	return res, nil
 }

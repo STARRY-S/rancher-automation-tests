@@ -2,7 +2,9 @@ package tencent
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
 	"github.com/sirupsen/logrus"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -22,6 +24,7 @@ func newTKEClient(
 	if err != nil {
 		return nil, fmt.Errorf("failed to create TKE client: %w", err)
 	}
+	time.Sleep(utils.DefaultInterval)
 	return client, nil
 }
 
@@ -34,5 +37,6 @@ func describeEKSContainerInstances(
 		logrus.Errorf("ListEKSContainerInstances failed: %v", err)
 		return nil, fmt.Errorf("ListEKSContainerInstances: %w", err)
 	}
+	time.Sleep(utils.DefaultInterval)
 	return response, nil
 }
