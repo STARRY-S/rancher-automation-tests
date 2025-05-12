@@ -1,11 +1,11 @@
-name: HWCloud Provisioning Tests
+name: AWSCN EKS Hostd-Provider-E2E Tests
 
 on:
   workflow_dispatch:
     inputs:
       RPM_VERSION:
-        description: 'Rancher Version (Ex. v2.11.0-ent-rcX)'
-        default: 'v2.11.1-ent-rc1'
+        description: 'Rancher Version (Ex. v2.11.1-ent-rcX)'
+        default: 'v2.11.1-ent-rc2'
         required: true
       K3S_VERSION:
         description: 'K3s version for Rancher Local Cluster'
@@ -13,25 +13,7 @@ on:
         required: true
       RPM_LOCAL_NAME:
         description: 'Rancher local cluster name, for run multiple tests'
-        default: 'starry-hwcloud-1'
-      TEST_CASE:
-        description: "Test case to run, separated by white spaces (Ex. huaweicloud/k3s-openeuler-huaweicloud)"
-        required: false
-        default: |
-          huaweicloud/k3s-openeuler-huaweicloud huaweicloud/rke2-openeuler-huaweicloud huaweicloud/rke1-openeuler-huaweicloud huaweicloud/huawei-cce
-      RANCHER_CLUSTERS:
-        description: 'Downstream cluster versions, separated by white spaces (Ex. v1.24.11+k3s1 v1.24.11+rke2r1)'
-        required: true
-        default: |
-          v1.32.3-rancher1-1
-            v1.31.7-rancher1-1
-            v1.30.11-rancher1-1
-            v1.32.3+rke2r1
-            v1.31.7+rke2r1
-            v1.30.11+rke2r1
-            v1.32.3+k3s1
-            v1.31.7+k3s1
-            v1.30.11+k3s1
+        default: 'starry-awscn-eks-1'
       RANCHER_CODE_REPO:
         description: 'GitHub Repo of rancher'
         required: true
@@ -39,7 +21,7 @@ on:
       ENVS:
         description: 'Other envs for tests, separated by white spaces (Ex. ENV1=AAA ENV2=BBB)'
         required: false
-        default: 'ARM64_ONLY=1 AMD64_ONLY='
+        default: 'ARM64_ONLY= AMD64_ONLY='
 
 env:
   # Pre-define environment variables
@@ -50,8 +32,6 @@ env:
   RPM_VERSION: ${{ github.event.inputs.RPM_VERSION }}
   K3S_VERSION: ${{ github.event.inputs.K3S_VERSION }}
   RPM_LOCAL_NAME: ${{ github.event.inputs.RPM_LOCAL_NAME }}
-  TEST_CASE: ${{ github.event.inputs.TEST_CASE }}
-  RANCHER_CLUSTERS: ${{ github.event.inputs.RANCHER_CLUSTERS }}
   RANCHER_CODE_REPO: ${{ github.event.inputs.RANCHER_CODE_REPO }}
   INPUT_ENVS: ${{ github.event.inputs.ENVS }}
 
@@ -67,16 +47,9 @@ env:
   # AWSCN (China)
   AWSCN_AK: ${{ secrets.AWSCN_AK }}
   AWSCN_SK: ${{ secrets.AWSCN_SK }}
-
-  # HWCloud
-  HUAWEI_ACCESS_KEY: ${{ secrets.HUAWEI_ACCESS_KEY }}
-  HUAWEI_SECRET_KEY: ${{ secrets.HUAWEI_SECRET_KEY }}
-  HUAWEI_PROJECT_ID: ${{ secrets.HUAWEI_PROJECT_ID }}
-  HUAWEI_REGION_ID: ${{ secrets.HUAWEI_REGION_ID }}
-
-  # Tencent cloud
-  TENCENT_ACCESS_KEY_ID: ${{ secrets.TENCENT_ACCESS_KEY_ID }}
-  TENCENT_ACCESS_KEY_SECRET: ${{ secrets.TENCENT_ACCESS_KEY_SECRET }}
+  AWS_AK: ${{ secrets.AWSCN_AK }}
+  AWS_SK: ${{ secrets.AWSCN_SK }}
+  AWS_REGION: "cn-northwest-1"
 
 jobs:
   provisioning-tests:
@@ -128,4 +101,4 @@ jobs:
         uses: ./.github/actions/run-with-post
         with:
           RUN: "scripts/ci/run-provisioning.sh"
-          POST: "scripts/ci/clean.sh hwcloud"
+          POST: "scripts/ci/clean.sh aws"

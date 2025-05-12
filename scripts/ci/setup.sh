@@ -31,6 +31,52 @@ RANCHER_BRANCH="release/${array[0]}.${array[1]}-ent"
 echo "Rancher branch: ${RANCHER_BRANCH}"
 git clone --depth=1 --single-branch --branch ${RANCHER_BRANCH} $RANCHER_REPO $RANCHER_SOURCE
 
+# Clone hosted-providers-e2e
+HOSTED_PROVIDERS_E2E_SOURCE="$HOME/hosted-providers-e2e"
+echo "Clone hosted-providers-e2e source code..."
+git clone --depth=1 --single-branch --branch main https://github.com/rancher/hosted-providers-e2e.git $HOSTED_PROVIDERS_E2E_SOURCE
+# Prepare EKS e2e config file
+cat > $HOSTED_PROVIDERS_E2E_SOURCE/cattle-config-provisioning.yaml << EOT
+rancher:
+  cleanup: false
+  insecure: true
+awsCredentials:
+  accessKey: ""
+  defaultRegion: cn-northwest-1
+  secretKey: ""
+eksClusterConfig:
+  kmsKey: ""
+  kubernetesVersion: "1.31"
+  loggingTypes: []
+  nodeGroups:
+  - desiredSize: 1
+    diskSize: 20
+    ec2SshKey: ""
+    gpu: false
+    imageId: ""
+    labels: {}
+    maxSize: 1
+    minSize: 1
+    nodeRole: arn:aws-cn:iam::801570287679:role/starry-test-eks-node-role
+    nodegroupName: test1
+    requestSpotInstances: true
+    resourceTags: {}
+    spotInstanceTypes:
+    - t3a.medium
+    - t3.medium
+    subnets:
+    - subnet-0c512a880509158d2
+    - subnet-02aab467ed72a912f
+    - subnet-0ad3642defaf29191
+    securityGroups:
+    - sg-0190e73d5ec40f125
+    serviceRole: eksClusterRole
+    tags: {}
+    userData: ""
+    version: "1.31"
+EOT
+echo "HOSTED_PROVIDERS_E2E_SOURCE=${HOSTED_PROVIDERS_E2E_SOURCE}" >> $GITHUB_ENV
+
 # Prepare ssh private key
 cp /opt/config/autok3s/$SSH_KEY tests/provisioning/$SSH_KEY
 

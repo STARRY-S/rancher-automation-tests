@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -euo pipefail
+cd $(dirname $0)
+
+echo "Running EKS e2e test on AWSCN..."
+cd ${HOSTED_PROVIDERS_E2E_SOURCE}/
+
+export PROVIDER=eks
+export AWS_ACCESS_KEY_ID=${AWSCN_AK}
+export AWS_SECRET_ACCESS_KEY=${AWSCN_SK}
+export EKS_REGION=${AWS_REGION:-"cn-northwest-1"}
+
+export CATTLE_TEST_CONFIG=$(pwd)/cattle-config-provisioning.yaml
+export RANCHER_HOSTNAME="${RANCHER_SERVER_URL}"
+export RANCHER_PASSWORD="${ADMIN_PWD}"
+
+set -x
+
+make e2e-provisioning-tests
+
+set +x

@@ -43,7 +43,7 @@ on:
 
 env:
   # Pre-define environment variables
-  CATTLE_MACHINE_VERSION: v0.15.0-rancher116
+  CATTLE_MACHINE_VERSION: v0.15.0-rancher127
   AUTOK3S_VERSION: v0.9.3
 
   # ENV defined by workflow dispatch inputs

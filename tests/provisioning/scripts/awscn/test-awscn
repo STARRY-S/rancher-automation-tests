@@ -5,3 +5,4 @@ cd $(dirname $0)
 ./rke1-ubuntu-awscn
 ./k3s-ubuntu-awscn
 ./rke2-ubuntu-awscn
+./awscn-eks

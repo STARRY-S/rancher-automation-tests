@@ -1,14 +1,14 @@
 cceClusterConfig:
-  regionID: "cn-east-3"
+  regionID: "ap-southeast-1"
   name: ""
   labels:
   flavor: "cce.s1.small"
   version: "v1.31"
   description: "provisioning test"
   hostNetwork:
-    vpcID: ""
-    subnetID: ""
-    securityGroup: ""
+    vpcID: "68c4b19c-6d7f-4f7f-9842-1b62f38a0f25"
+    subnetID: "2987cf41-13c0-42a7-9809-194410232d0a"
+    securityGroup: "631596f0-b8d2-4dc4-875d-48c0188f0d85"
   containerNetwork:
     mode: "vpc-router"
     cidr: "10.16.0.0/16"
@@ -30,8 +30,8 @@ cceClusterConfig:
   - name: "np-1"
     type: "vm"
     nodeTemplate:
-      flavor: "kc1.large.2"
-      availableZone: "cn-east-3a"
+      flavor: "kc1.xlarge.2"
+      availableZone: "ap-southeast-1a"
       operatingSystem: "EulerOS 2.9"
       sshKey: "starry"
       rootVolume:
@@ -42,4 +42,4 @@ cceClusterConfig:
         type: "SSD"
       billingMode: 0
       runtime: "containerd"
-    initialNodeCount: 2
+    initialNodeCount: 1
