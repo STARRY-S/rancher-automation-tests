@@ -100,5 +100,5 @@ jobs:
       - name: Run Provisioning Tests
         uses: ./.github/actions/run-with-post
         with:
-          RUN: "scripts/ci/run-provisioning.sh"
+          RUN: "scripts/ci/run-e2e.sh"
           POST: "scripts/ci/clean.sh aws"

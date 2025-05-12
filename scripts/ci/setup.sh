@@ -54,6 +54,7 @@ eksClusterConfig:
     ec2SshKey: ""
     gpu: false
     imageId: ""
+    instanceType: null
     labels: {}
     maxSize: 1
     minSize: 1
@@ -64,16 +65,21 @@ eksClusterConfig:
     spotInstanceTypes:
     - t3a.medium
     - t3.medium
-    subnets:
-    - subnet-0c512a880509158d2
-    - subnet-02aab467ed72a912f
-    - subnet-0ad3642defaf29191
-    securityGroups:
-    - sg-0190e73d5ec40f125
-    serviceRole: eksClusterRole
+    subnets: []
     tags: {}
     userData: ""
-    version: "1.31"
+  privateAccess: true
+  publicAccess: true
+  publicAccessSources: []
+  region: cn-northwest-1
+  secretsEncryption: false
+  securityGroups:
+  - sg-0190e73d5ec40f125
+  serviceRole: eksClusterRole
+  subnets:
+  - subnet-0c512a880509158d2
+  - subnet-02aab467ed72a912f
+  - subnet-0ad3642defaf29191
 EOT
 echo "HOSTED_PROVIDERS_E2E_SOURCE=${HOSTED_PROVIDERS_E2E_SOURCE}" >> $GITHUB_ENV
 

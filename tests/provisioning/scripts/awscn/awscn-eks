@@ -20,3 +20,4 @@ set -x
 make e2e-provisioning-tests
 
 set +x
+echo "WRAPPER_EOF"

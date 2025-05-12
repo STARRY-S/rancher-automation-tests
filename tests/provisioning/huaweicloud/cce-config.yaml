@@ -42,4 +42,4 @@ cceClusterConfig:
         type: "SSD"
       billingMode: 0
       runtime: "containerd"
-    initialNodeCount: 1
+    initialNodeCount: 2 # The replicas of coredns & csi controller on cce is 2

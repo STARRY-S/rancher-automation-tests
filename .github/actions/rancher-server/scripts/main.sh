@@ -28,8 +28,8 @@ autok3s create --provider ${AUTOK3S_PROVIDER} \
     ${AUTOK3S_CREATE_ARGS:-} &> autok3s_log.txt
 
 echo "--------------------------------------"
-echo "Wait 60 seconds for K3s server Ready..."
-sleep 60
+echo "Wait 90 seconds for K3s server Ready..."
+sleep 90
 
 wait_rpm_server_ready;
 
