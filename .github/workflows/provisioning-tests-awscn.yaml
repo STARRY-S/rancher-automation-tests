@@ -5,7 +5,7 @@ on:
     inputs:
       RPM_VERSION:
         description: 'Rancher Version (Ex. v2.11.1-ent-rcX)'
-        default: 'v2.11.1-ent-rc1'
+        default: 'v2.11.1-ent-rc2'
         required: true
       K3S_VERSION:
         description: 'K3s version for Rancher Local Cluster'
