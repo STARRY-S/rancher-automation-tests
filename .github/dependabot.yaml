@@ -15,6 +15,6 @@ updates:
   ## group all dependencies with following prefixes into a single PR.
   groups:
     SDK:
-      patterns: [ "k8s.io/*", "github.com/tencentcloud/*", "github.com/aws/*", "github.com/huaweicloud/*" ]
+      patterns: [ "*" ]
   ignore: []
   target-branch: "main"
