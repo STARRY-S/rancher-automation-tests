@@ -1,4 +1,6 @@
 name: AWSCN EKS Hostd-Provider-E2E Tests
+run-name: >-
+  ${{ format('[AWSCN] EKS E2E Test {0}', inputs.RPM_VERSION) }}
 
 on:
   workflow_dispatch:

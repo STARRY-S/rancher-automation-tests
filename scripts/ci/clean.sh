@@ -31,7 +31,7 @@ if [[ -e "remain-resources.txt" ]]; then
     rm remain-resources.txt
     echo
     echo "Waiting for resources cleanup..."
-    sleep 60
+    sleep 180
     ./checker $CLOUD \
         --filter="auto-rancher-" \
         --filter="oetest-" \

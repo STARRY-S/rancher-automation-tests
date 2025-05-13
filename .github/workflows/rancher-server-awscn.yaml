@@ -1,4 +1,6 @@
 name: Rancher Local Server (AWS China)
+run-name: >-
+  ${{ format('[Rancher Local Cluster (AWSCN)] {0}', inputs.RPM_VERSION) }}
 
 on:
   workflow_dispatch:

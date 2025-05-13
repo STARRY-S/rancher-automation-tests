@@ -1,4 +1,6 @@
 name: AWSCN Provisioning Tests
+run-name: >-
+  ${{ format('[AWSCN] {0} - {1}', inputs.RPM_VERSION, inputs.TEST_CASE) }}
 
 on:
   workflow_dispatch:
