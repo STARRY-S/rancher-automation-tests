@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/STARRY-S/rancher-kev2-provisioning-tests/pkg/utils"
@@ -20,6 +21,12 @@ func listClusters(
 ) (*eks.ListClustersOutput, error) {
 	o, err := c.ListClusters(ctx, &eks.ListClustersInput{})
 	if err != nil {
+		if strings.Contains(err.Error(), "not authorized to perform") {
+			logrus.Warnf("Skip checking EKS on 403 permission denined: %v", err)
+			return &eks.ListClustersOutput{
+				Clusters: []string{},
+			}, nil
+		}
 		logrus.Errorf("ListClusters failed: %v", err)
 		return nil, err
 	}

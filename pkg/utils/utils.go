@@ -127,7 +127,7 @@ func MatchFilters(s string, filters []string) bool {
 		return false
 	}
 	for _, f := range filters {
-		if strings.ContainsAny(s, f) {
+		if strings.Contains(s, f) {
 			return true
 		}
 	}

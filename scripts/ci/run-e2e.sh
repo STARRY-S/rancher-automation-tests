@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run provisioning tests on GHA
+# Run E2E tests on GHA
 
 set -euo pipefail
 

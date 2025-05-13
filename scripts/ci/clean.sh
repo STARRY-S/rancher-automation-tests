@@ -14,14 +14,28 @@ rm -r ${HOME}/.ssh/ || true
 CLOUD=${1:-hwcloud}
 
 echo "Wait a few seconds to cleanup remaining resources..."
-sleep 10
+sleep 30
 echo "Start cleanup cloud resources: $CLOUD"
+
+CHECK_OPTIONS=""
+case ${CLOUD} in
+    aws)
+        CHECK_OPTIONS="${CHECK_OPTIONS} --check-eks=false"
+        ;;
+    hwcloud)
+        CHECK_OPTIONS="${CHECK_OPTIONS}"
+        ;;
+    tencent)
+        CHECK_OPTIONS="${CHECK_OPTIONS}"
+        ;;
+esac
 
 ./checker $CLOUD \
     --filter="auto-rancher-" \
     --filter="oetest" \
     --filter="auto-aws-" \
     --output="remain-resources.txt" \
+    ${CHECK_OPTIONS} \
     --auto-yes \
     --clean
 
@@ -37,7 +51,8 @@ if [[ -e "remain-resources.txt" ]]; then
         --filter="oetest-" \
         --filter="auto-aws-" \
         --output="remain-resources.txt" \
-        --auto-yes \
+        ${CHECK_OPTIONS} \
+        --auto-yes
 
     if [[ -e "remain-resources.txt" ]]; then
         echo "There still have some remaining resources:"

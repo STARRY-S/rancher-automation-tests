@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run provisioning tests on GHA
+# Run validation tests on GHA
 
 set -euo pipefail
 
@@ -10,4 +10,4 @@ echo "Run validation tests"
 echo "Current dir: $(pwd)"
 ./tests/validation/scripts/test-validation.sh | ./checker wrapper
 
-echo Provisioning test: DONE
+echo "Validation test: DONE"

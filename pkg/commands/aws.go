@@ -54,7 +54,7 @@ func newAwsCmd() *awsCmd {
 	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
 	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
 	flags.BoolVarP(&cc.checckEC2, "check-ec2", "", true, "check EC2 instances")
-	flags.BoolVarP(&cc.checkEKS, "check-eks", "", true, "check EKS clusters")
+	flags.BoolVarP(&cc.checkEKS, "check-eks", "", true, "check EKS clusters") // Disable EKS by default
 	flags.BoolVarP(&cc.autoYes, "auto-yes", "y", false, "auto yes")
 	flags.StringVarP(&cc.ak, "ak", "", "", "aws cloud access key (env '"+ENV_AWS_AK+"')")
 	flags.StringVarP(&cc.sk, "sk", "", "", "aws cloud secret key (env '"+ENV_AWS_SK+"')")
