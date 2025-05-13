@@ -87,7 +87,7 @@ get_rpm_config() {
                             --header 'Content-Type: application/json')
 
     local server_url_body=$(echo "$server_url_response" | jq --arg server_url "https://$server_url" '.value = $server_url')
-    echo "setting server_url for RPM: $server_url_body"
+    echo "setting server_url for RPM..."
 
     local response_code=$(curl -s -o /dev/null --insecure -w "%{http_code}" -L -X PUT "$setting_server_url" \
         -H "Content-Type: application/json" \
