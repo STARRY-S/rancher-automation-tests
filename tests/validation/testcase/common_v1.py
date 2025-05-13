@@ -4,6 +4,7 @@ import json
 import yaml
 import rancher
 import semver
+import datetime
 
 
 CATTLE_V1_API_URL = CATTLE_TEST_URL + "/v1"
@@ -110,7 +111,15 @@ def read_yaml_from_resource_dir(dir, filename):
         assert False, e
 
 
-def get_chart_latest_version(catalog, chart_name):
+def get_chart_latest_version(client, catalog, chart_name):
+    # Refrest pandaria-catalog repo
+    now = datetime.datetime.now(datetime.timezone.utc)
+    catalog.spec.forceUpdate = now.strftime("%Y-%m-%dT%H:%M:%SZ") # 2025-05-13T07:05:19Z"
+    client.update(catalog, catalog)
+    print("Refreshing pandaria-catalog repository")
+    time.sleep(15)
+
+    # Fetch the latest chart version
     headers = {"Accept": "application/json",
                "Authorization": "Bearer " + ADMIN_TOKEN}
     url = catalog["links"]["index"]

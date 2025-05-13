@@ -28,7 +28,7 @@ def install_flatnetwork():
 
     global m_version
     if m_version is None:
-        m_version = get_chart_latest_version(pandaria_catalog, m_chart_name)
+        m_version = get_chart_latest_version(client, pandaria_catalog, m_chart_name)
         print(f"chart version is not provided, get chart version from repo: {m_version}")
 
     cluster_id = factory["cluster"]["id"]

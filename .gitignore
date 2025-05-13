@@ -28,6 +28,9 @@ go.work.sum
 # env file
 .env
 
+# Python venv
+.venv
+
 # pytest cache
 __pycache__/
 *.py[cod]

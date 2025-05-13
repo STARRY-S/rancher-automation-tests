@@ -195,7 +195,7 @@ def change_member_role_in_project(client, user, prtb, role_template_id):
 
 def create_kubeconfig(cluster):
     generateKubeConfigOutput = cluster.generateKubeconfig()
-    print(generateKubeConfigOutput.config)
+    # print(generateKubeConfigOutput.config)
     file = open(kube_fname, "w")
     file.write(generateKubeConfigOutput.config)
     file.close()
