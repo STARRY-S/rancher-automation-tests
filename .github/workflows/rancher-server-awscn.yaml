@@ -87,5 +87,5 @@ jobs:
         uses: ./.github/actions/run-with-post
         with:
           RUN: |
-            sleep 8h"
+            sleep 8h
           POST: "scripts/ci/clean.sh aws"
