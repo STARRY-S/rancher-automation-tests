@@ -29,6 +29,8 @@ on:
             v1.30.13+rke2r1
             v1.31.9+k3s1
             v1.30.13+k3s1
+            v1.31.8-rancher1-1
+            v1.30.12-rancher1-1
       RANCHER_CODE_REPO:
         description: 'GitHub Repo of rancher'
         required: true
