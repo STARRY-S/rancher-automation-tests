@@ -109,7 +109,7 @@ jobs:
           AUTOK3S_PROVIDER: "aws"
           AUTOK3S_SSH_USER: "ubuntu"
           AUTOK3S_AMI: "ami-063dbdfa885edce48"
-          AUTOK3S_INSTANCE_TYPE: "t3a.large"
+          AUTOK3S_INSTANCE_TYPE: "c5a.xlarge"
           AUTOK3S_REGION: "cn-northwest-1"
           AUTOK3S_ZONE: "cn-northwest-1c"
           AUTOK3S_SECURITY_GROUP: "sg-0d0bb6c7aedebaa51"
