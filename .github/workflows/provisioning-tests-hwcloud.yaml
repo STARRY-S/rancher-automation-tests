@@ -7,11 +7,11 @@ on:
     inputs:
       RPM_VERSION:
         description: 'Rancher Version (Ex. v2.11.0-ent-rcX)'
-        default: 'v2.11.1-ent-rc2'
+        default: 'v2.10.6-ent-rc2'
         required: true
       K3S_VERSION:
         description: 'K3s version for Rancher Local Cluster'
-        default: 'v1.31.8+k3s1'
+        default: 'v1.31.9+k3s1'
         required: true
       RPM_LOCAL_NAME:
         description: 'Rancher local cluster name, for run multiple tests'
@@ -25,15 +25,10 @@ on:
         description: 'Downstream cluster versions, separated by white spaces (Ex. v1.24.11+k3s1 v1.24.11+rke2r1)'
         required: true
         default: |
-          v1.32.4-rancher1-1
-            v1.31.8-rancher1-1
-            v1.30.12-rancher1-1
-            v1.32.4+rke2r1
-            v1.31.8+rke2r1
-            v1.30.12+rke2r1
-            v1.32.4+k3s1
-            v1.31.8+k3s1
-            v1.30.12+k3s1
+          v1.31.9+rke2r1
+            v1.30.13+rke2r1
+            v1.31.9+k3s1
+            v1.30.13+k3s1
       RANCHER_CODE_REPO:
         description: 'GitHub Repo of rancher'
         required: true

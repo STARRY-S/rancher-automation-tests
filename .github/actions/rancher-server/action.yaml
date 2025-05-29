@@ -3,7 +3,7 @@ description: "Launch Rancher by AutoK3s on specific cloud provider"
 inputs:
   K3S_VERSION:
     description: "K3s cluster version"
-    default: "v1.31.8+k3s1"
+    default: "v1.31.9+k3s1"
     required: true
   SSH_KEY_NAME:
     description: "SSH Key filename"
