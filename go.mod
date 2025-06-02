@@ -13,11 +13,11 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1160
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1162
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1161
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1160
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1162
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1176
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1177
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1177
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1172
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1177
 	golang.org/x/term v0.32.0
 )
 
