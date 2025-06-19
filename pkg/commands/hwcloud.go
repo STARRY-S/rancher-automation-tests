@@ -22,6 +22,7 @@ type hwcloudCmd struct {
 
 	clean     bool
 	filters   []string
+	excludes  []string
 	output    string
 	autoYes   bool
 	ak        string
@@ -53,6 +54,7 @@ func newHwcloudCmd() *hwcloudCmd {
 	flags := cc.baseCmd.cmd.Flags()
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
 	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
+	flags.StringArrayVarP(&cc.excludes, "exclude", "e", nil, "whitelist to exclude instance name (Ex. DoNotDelete)")
 	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
 	flags.BoolVarP(&cc.checkCCE, "check-cce", "", true, "check CCE cluster")
 	flags.BoolVarP(&cc.checkECS, "check-ecs", "", true, "check ECS instances")
@@ -73,8 +75,9 @@ func (cc *hwcloudCmd) prepareProviders() (provider.Providers, error) {
 	checkEnv(&cc.projectID, ENV_HUAWEI_PROJECT_ID, true)
 
 	p, err := hwcloud.NewProvider(&hwcloud.Options{
-		Filters: cc.filters,
-		Clean:   cc.clean,
+		Filters:  cc.filters,
+		Excludes: cc.excludes,
+		Clean:    cc.clean,
 
 		CheckCCE: cc.checkCCE,
 		CheckECS: cc.checkECS,

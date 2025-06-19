@@ -17,8 +17,9 @@ import (
 )
 
 type provider struct {
-	filters []string
-	clean   bool
+	filters  []string
+	excludes []string
+	clean    bool
 
 	cfg          aws.Config
 	ec2Client    *ec2.Client
@@ -85,7 +86,7 @@ func (p *provider) checkEC2(ctx context.Context) error {
 					}
 				}
 			}
-			if !utils.MatchFilters(name, p.filters) {
+			if !utils.MatchFilters(name, p.filters, p.excludes) {
 				continue
 			}
 			s := fmt.Sprintf("EC2 instance ID [%v] name [%v] status [%v] Tags %v not cleanup!",
@@ -144,8 +145,9 @@ func (p *provider) Unclean() bool {
 }
 
 type Options struct {
-	Filters []string
-	Clean   bool
+	Filters  []string
+	Excludes []string
+	Clean    bool
 
 	CheckEC2 bool
 	CheckEKS bool
@@ -167,8 +169,9 @@ func NewProvider(o *Options) (*provider, error) {
 	}
 
 	return &provider{
-		filters: slices.Clone(o.Filters),
-		clean:   o.Clean,
+		filters:  slices.Clone(o.Filters),
+		excludes: slices.Clone(o.Excludes),
+		clean:    o.Clean,
 
 		cfg:          config,
 		ec2Client:    newEc2Client(config),

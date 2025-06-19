@@ -41,6 +41,7 @@ for CLOUD in ${CLOUDS[@]}; do
         --filter="starry" \
         --filter="eip" \
         --filter="rancher" \
+        --exclude="DoNotDelete" \
         --output="remain-resources.txt" \
         --auto-yes $EXTRA_OPTIONS
     set +x

@@ -118,7 +118,7 @@ func CheckFileExistsPrompt(
 	return nil
 }
 
-func MatchFilters(s string, filters []string) bool {
+func MatchFilters(s string, filters []string, excludes []string) bool {
 	if len(filters) == 0 {
 		return true
 	}
@@ -128,6 +128,11 @@ func MatchFilters(s string, filters []string) bool {
 	}
 	for _, f := range filters {
 		if strings.Contains(s, f) {
+			for _, e := range excludes {
+				if strings.Contains(s, e) {
+					return false
+				}
+			}
 			return true
 		}
 	}

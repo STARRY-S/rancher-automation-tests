@@ -20,13 +20,14 @@ type tencentCloudCmd struct {
 	checkEIP   bool
 	checkEKSCI bool
 
-	clean   bool
-	filters []string
-	output  string
-	autoYes bool
-	ak      string
-	sk      string
-	region  string
+	clean    bool
+	filters  []string
+	excludes []string
+	output   string
+	autoYes  bool
+	ak       string
+	sk       string
+	region   string
 }
 
 func newTencentCloudCmd() *tencentCloudCmd {
@@ -52,6 +53,7 @@ func newTencentCloudCmd() *tencentCloudCmd {
 	flags := cc.baseCmd.cmd.Flags()
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
 	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
+	flags.StringArrayVarP(&cc.excludes, "exclude", "e", nil, "whitelist to exclude instance name (Ex. DoNotDelete)")
 	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
 	flags.BoolVarP(&cc.checkCVM, "check-cvm", "", true, "check CVM instances")
 	flags.BoolVarP(&cc.checkEIP, "check-eip", "", true, "check EIP resources")
@@ -71,8 +73,9 @@ func (cc *tencentCloudCmd) prepareProviders() (provider.Providers, error) {
 	checkEnv(&cc.region, ENV_TENCENT_REGION, true)
 
 	p, err := tencent.NewProvider(&tencent.Options{
-		Filters: cc.filters,
-		Clean:   cc.clean,
+		Filters:  cc.filters,
+		Excludes: cc.excludes,
+		Clean:    cc.clean,
 
 		CheckCVM:   cc.checkCVM,
 		CheckTKE:   false,

@@ -14,8 +14,9 @@ import (
 )
 
 type provider struct {
-	filters []string
-	clean   bool
+	filters  []string
+	excludes []string
+	clean    bool
 
 	clientAuth   *ClientAuth
 	cceClient    *cce.CceClient
@@ -69,7 +70,7 @@ func (p *provider) checkCCE(ctx context.Context) error {
 			continue
 		}
 
-		if !utils.MatchFilters(c.Metadata.Name, p.filters) {
+		if !utils.MatchFilters(c.Metadata.Name, p.filters, p.excludes) {
 			// skip filter not match
 			continue
 		}
@@ -115,7 +116,7 @@ func (p *provider) checkECS(ctx context.Context) error {
 			continue
 		}
 
-		if !utils.MatchFilters(c.Name, p.filters) {
+		if !utils.MatchFilters(c.Name, p.filters, p.excludes) {
 			// skip filter not match
 			continue
 		}
@@ -181,8 +182,9 @@ func (p *provider) Unclean() bool {
 }
 
 type Options struct {
-	Filters []string
-	Clean   bool
+	Filters  []string
+	Excludes []string
+	Clean    bool
 
 	CheckCCE bool
 	CheckECS bool
@@ -213,8 +215,9 @@ func NewProvider(o *Options) (*provider, error) {
 		return nil, fmt.Errorf("failed to init hwcloud eip client: %w", err)
 	}
 	return &provider{
-		filters: slices.Clone(o.Filters),
-		clean:   o.Clean,
+		filters:  slices.Clone(o.Filters),
+		excludes: slices.Clone(o.Excludes),
+		clean:    o.Clean,
 
 		needCheckCCE: o.CheckCCE,
 		needCheckECS: o.CheckECS,

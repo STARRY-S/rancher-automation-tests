@@ -19,14 +19,15 @@ type awsCmd struct {
 	checkEKS  bool
 	checckEC2 bool
 
-	clean   bool
-	filters []string
-	output  string
-	autoYes bool
-	ak      string
-	sk      string
-	token   string
-	region  string
+	clean    bool
+	filters  []string
+	excludes []string
+	output   string
+	autoYes  bool
+	ak       string
+	sk       string
+	token    string
+	region   string
 }
 
 func newAwsCmd() *awsCmd {
@@ -52,6 +53,7 @@ func newAwsCmd() *awsCmd {
 	flags := cc.baseCmd.cmd.Flags()
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
 	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
+	flags.StringArrayVarP(&cc.excludes, "exclude", "e", nil, "whitelist to exclude instance name (Ex. DoNotDelete)")
 	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
 	flags.BoolVarP(&cc.checckEC2, "check-ec2", "", true, "check EC2 instances")
 	flags.BoolVarP(&cc.checkEKS, "check-eks", "", true, "check EKS clusters") // Disable EKS by default
@@ -71,8 +73,9 @@ func (cc *awsCmd) prepareProviders() (provider.Providers, error) {
 	checkEnv(&cc.region, ENV_AWS_REGION, true)
 
 	p, err := aws.NewProvider(&aws.Options{
-		Filters: cc.filters,
-		Clean:   cc.clean,
+		Filters:  cc.filters,
+		Excludes: cc.excludes,
+		Clean:    cc.clean,
 
 		CheckEC2: cc.checckEC2,
 		CheckEKS: cc.checkEKS,

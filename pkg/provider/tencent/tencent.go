@@ -16,6 +16,7 @@ import (
 
 type provider struct {
 	filters    []string
+	excludes   []string
 	clean      bool
 	clientAuth *ClientAuth
 
@@ -72,7 +73,7 @@ func (p *provider) checkCVM(ctx context.Context) error {
 		return nil
 	}
 	for _, e := range res.Response.InstanceSet {
-		if !utils.MatchFilters(utils.Value(e.InstanceName), p.filters) {
+		if !utils.MatchFilters(utils.Value(e.InstanceName), p.filters, p.excludes) {
 			// skip filter not match
 			continue
 		}
@@ -110,7 +111,7 @@ func (p *provider) checkEIP(ctx context.Context) error {
 		return nil
 	}
 	for _, e := range res.Response.AddressSet {
-		if !utils.MatchFilters(utils.Value(e.AddressName), p.filters) {
+		if !utils.MatchFilters(utils.Value(e.AddressName), p.filters, p.excludes) {
 			// skip filter not match
 			continue
 		}
@@ -147,7 +148,7 @@ func (p *provider) checkEKSCI(ctx context.Context) error {
 		return nil
 	}
 	for _, e := range response.Response.EksCis {
-		if !utils.MatchFilters(utils.Value(e.EksCiName), p.filters) {
+		if !utils.MatchFilters(utils.Value(e.EksCiName), p.filters, p.excludes) {
 			// skip filter not match
 			continue
 		}
@@ -184,7 +185,7 @@ func (p *provider) checkCBS(ctx context.Context) error {
 		return nil
 	}
 	for _, d := range res.Response.DiskSet {
-		if !utils.MatchFilters(utils.Value(d.DiskName), p.filters) {
+		if !utils.MatchFilters(utils.Value(d.DiskName), p.filters, p.excludes) {
 			// skip filter not match
 			continue
 		}
@@ -213,8 +214,9 @@ func (p *provider) Unclean() bool {
 }
 
 type Options struct {
-	Filters []string
-	Clean   bool
+	Filters  []string
+	Excludes []string
+	Clean    bool
 
 	CheckCVM   bool
 	CheckTKE   bool
@@ -251,8 +253,9 @@ func NewProvider(o *Options) (*provider, error) {
 	}
 
 	return &provider{
-		filters: slices.Clone(o.Filters),
-		clean:   o.Clean,
+		filters:  slices.Clone(o.Filters),
+		excludes: slices.Clone(o.Excludes),
+		clean:    o.Clean,
 
 		needCheckCVM:   o.CheckCVM,
 		needCheckCBS:   o.CheckCBS,

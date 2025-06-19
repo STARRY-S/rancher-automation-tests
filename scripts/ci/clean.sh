@@ -34,6 +34,7 @@ esac
     --filter="auto-rancher-" \
     --filter="oetest" \
     --filter="auto-aws-" \
+    --exclude="DoNotDelete" \
     --output="remain-resources.txt" \
     ${CHECK_OPTIONS} \
     --auto-yes \
@@ -50,6 +51,7 @@ if [[ -e "remain-resources.txt" ]]; then
         --filter="auto-rancher-" \
         --filter="oetest-" \
         --filter="auto-aws-" \
+        --exclude="DoNotDelete" \
         --output="remain-resources.txt" \
         ${CHECK_OPTIONS} \
         --auto-yes
