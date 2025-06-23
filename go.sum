@@ -61,8 +61,8 @@ github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
 github.com/google/go-cmp v0.5.2 h1:X2ev0eStA3AbceY54o37/0PQ/UWqKEiiO2dKL5OPaFM=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
-github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.153 h1:EvwDKUhasJ7ePPCBIEAe5U6aqXKiC3XMAJ8J2IHpvsc=
-github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.153/go.mod h1:Y/+YLCFCJtS29i2MbYPTUlNNfwXvkzEsZKR0imY/2aY=
+github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.155 h1:R8hjwhuy5qzrYbqpj0D/fwGPDZgmlIyBjT3fzZbM38Q=
+github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.155/go.mod h1:Y/+YLCFCJtS29i2MbYPTUlNNfwXvkzEsZKR0imY/2aY=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
