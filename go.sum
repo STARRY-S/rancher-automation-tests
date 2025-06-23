@@ -97,12 +97,13 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.1183/go.mod h1
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1181/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1183/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1186/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1187 h1:HgxqOgw91/oB+yG23gdMyoiQwVVIUxSdgKPrdLNBIfI=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1187/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1191/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1192 h1:3K6aJXXkjBLxqFYnBqAqFW5YqxmwMT0HR2F4gxQiNMU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1192/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1181 h1:ZhNKA9kNSiky1vQQdbHybuor2oQvf420Sw36llphXGk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1181/go.mod h1:P3cKvyPa/1NEJaMrdXrkw9LwfJIW+boOppDAo4LEuwA=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1187 h1:D2CDWqLxjxInc/yJWE5ZwcXKwRrGMWsNc/gssfTRxAM=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1187/go.mod h1:sH0m2x2vbcidWIxxPZ99IKYV+AI2T3BCQEaYQPXNRHM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1191 h1:kAzIY3LrC27GZ4ThTq9x7HL+Zd3lLIMA1RhsDMhsi7U=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.1191/go.mod h1:tPwpZEsomZ97/HtXJiB2BvvtTDG5GtEkmLz52F/Hs94=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1186 h1:IjjfQICPshGRWS7Lks7+anwfZncXIqpjF6mss8CdCeQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.1186/go.mod h1:Ln7VhffwM3WEMQQSCdgsn9LktY3agpArIuq8BUCXm4g=
 github.com/tjfoc/gmsm v1.4.1 h1:aMe1GlZb+0bLjn+cKTPEvvn9oUEBlJitaZiiBwsbgho=
