@@ -91,9 +91,14 @@ spec:
     ingress.enabled: "false" # use nodeport
     replicas: 1
     global.cattle.psp.enabled: "${IS_PSP_ENABLED}"
-    postDelete.enabled: "${IS_POST_DELETE_ENABLED}" # disable post-delete hook instead of pulling post-delete image
+    # postDelete.enabled: "${IS_POST_DELETE_ENABLED}" # disable post-delete hook instead of pulling post-delete image
     rancherImage: "${RANCHER_IMAGE}"
     systemDefaultRegistry: "${SYSTEM_DEFAULT_REGISTRY}"
+    auditLog.destination: "hostPath"
+    auditLog.maxAge: 7
+    auditLog.level: 3
+    useBundledSystemChart: "true"
+    postDelete.image.repository: /rancher/shell
     extraEnv[0].name: "CATTLE_BASE_REGISTRY"
     extraEnv[0].value: ""
 ---
