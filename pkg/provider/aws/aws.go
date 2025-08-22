@@ -17,9 +17,12 @@ import (
 )
 
 type provider struct {
-	filters  []string
-	excludes []string
-	clean    bool
+	filters     []string
+	excludes    []string
+	clean       bool
+	shutdown    bool
+	dryRun      bool
+	instanceIDs []string
 
 	cfg          aws.Config
 	ec2Client    *ec2.Client
@@ -45,6 +48,16 @@ func (p *provider) Check(ctx context.Context) error {
 	if err := p.checkEKS(ctx); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (p *provider) Start(ctx context.Context) error {
+	if _, err := startInstance(ctx, p.ec2Client, p.instanceIDs, p.dryRun); err != nil {
+		logrus.Errorf("failed to start EC2 instance %v: %v", p.instanceIDs, err)
+		return fmt.Errorf("failed to start AWS ec2 instance: %w", err)
+	}
+	logrus.WithFields(logrus.Fields{"Provider": "AWS"}).
+		Infof("request to start EC2 instances %v", p.instanceIDs)
 	return nil
 }
 
@@ -100,12 +113,22 @@ func (p *provider) checkEC2(ctx context.Context) error {
 	}
 
 	if p.clean && len(ids) > 0 {
-		if _, err := terminateInstances(ctx, p.ec2Client, ids); err != nil {
+		if _, err := terminateInstances(ctx, p.ec2Client, ids, p.dryRun); err != nil {
 			logrus.Errorf("failed to terminate EC2 instance %v: %v", ids, err)
 			return fmt.Errorf("failed to terminate AWS ec2 instance: %w", err)
 		}
 		logrus.WithFields(logrus.Fields{"Provider": "AWS"}).
 			Infof("request to terminate EC2 instances %v", ids)
+		return nil
+	}
+	if p.shutdown && len(ids) > 0 {
+		if _, err := shutdownInstance(ctx, p.ec2Client, ids, p.dryRun); err != nil {
+			logrus.Errorf("failed to shutdown EC2 instance %v: %v", ids, err)
+			return fmt.Errorf("failed to shutdown AWS ec2 instance: %w", err)
+		}
+		logrus.WithFields(logrus.Fields{"Provider": "AWS"}).
+			Infof("request to shutdown EC2 instances %v", ids)
+		return nil
 	}
 	return nil
 }
@@ -145,9 +168,12 @@ func (p *provider) Unclean() bool {
 }
 
 type Options struct {
-	Filters  []string
-	Excludes []string
-	Clean    bool
+	Filters     []string
+	Excludes    []string
+	Clean       bool
+	Shutdown    bool
+	DryRun      bool
+	InstanceIDs []string
 
 	CheckEC2 bool
 	CheckEKS bool
@@ -169,9 +195,12 @@ func NewProvider(o *Options) (*provider, error) {
 	}
 
 	return &provider{
-		filters:  slices.Clone(o.Filters),
-		excludes: slices.Clone(o.Excludes),
-		clean:    o.Clean,
+		filters:     slices.Clone(o.Filters),
+		excludes:    slices.Clone(o.Excludes),
+		clean:       o.Clean,
+		shutdown:    o.Shutdown,
+		dryRun:      o.DryRun,
+		instanceIDs: o.InstanceIDs,
 
 		cfg:          config,
 		ec2Client:    newEc2Client(config),

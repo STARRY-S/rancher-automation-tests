@@ -1,0 +1,30 @@
+name: AWS Instance Startup
+
+on:
+  schedule:
+    # min hour day month week
+    - cron: '00 0 * * *' # Run on 08:00(UTC+8) every day
+  workflow_dispatch:
+
+env:
+  AWS_AK: ${{ secrets.AWS_AK }}
+  AWS_SK: ${{ secrets.AWS_SK }}
+  AWS_REGION: "ap-northeast-3"
+  AWS_START_INSTANCE_ID: ${{ vars.AWS_START_INSTANCE_ID }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.x
+      - name: Run Check
+        run: |
+          set -euxo pipefail
+          ./scripts/build.sh
+          ./checker aws start \
+              --id=$AWS_START_INSTANCE_ID

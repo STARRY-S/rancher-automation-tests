@@ -29,15 +29,50 @@ func describeInstances(
 }
 
 func terminateInstances(
-	ctx context.Context, c *ec2.Client, ids []string,
+	ctx context.Context, c *ec2.Client, ids []string, dryRun bool,
 ) (*ec2.TerminateInstancesOutput, error) {
 	o, err := c.TerminateInstances(
 		ctx, &ec2.TerminateInstancesInput{
 			InstanceIds: ids,
+			DryRun:      &dryRun,
 		},
 	)
 	if err != nil {
 		logrus.Errorf("TerminateInstances failed: %v", err)
+		return nil, err
+	}
+	time.Sleep(utils.DefaultInterval)
+	return o, nil
+}
+
+func shutdownInstance(
+	ctx context.Context, c *ec2.Client, ids []string, dryRun bool,
+) (*ec2.StopInstancesOutput, error) {
+	o, err := c.StopInstances(
+		ctx, &ec2.StopInstancesInput{
+			InstanceIds: ids,
+			DryRun:      &dryRun,
+		},
+	)
+	if err != nil {
+		logrus.Errorf("StopInstances failed: %v", err)
+		return nil, err
+	}
+	time.Sleep(utils.DefaultInterval)
+	return o, nil
+}
+
+func startInstance(
+	ctx context.Context, c *ec2.Client, ids []string, dryRun bool,
+) (*ec2.StartInstancesOutput, error) {
+	o, err := c.StartInstances(
+		ctx, &ec2.StartInstancesInput{
+			InstanceIds: ids,
+			DryRun:      &dryRun,
+		},
+	)
+	if err != nil {
+		logrus.Errorf("StartInstances failed: %v", err)
 		return nil, err
 	}
 	time.Sleep(utils.DefaultInterval)

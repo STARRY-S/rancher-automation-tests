@@ -20,6 +20,8 @@ type awsCmd struct {
 	checckEC2 bool
 
 	clean    bool
+	shutdown bool
+	dryRun   bool
 	filters  []string
 	excludes []string
 	output   string
@@ -52,6 +54,8 @@ func newAwsCmd() *awsCmd {
 	})
 	flags := cc.baseCmd.cmd.Flags()
 	flags.BoolVarP(&cc.clean, "clean", "c", false, "cleanup remaning resources")
+	flags.BoolVarP(&cc.shutdown, "shutdown", "", false, "shutdown running EC2 instance")
+	flags.BoolVarP(&cc.dryRun, "dry-run", "", false, "Dry-Run, do not delete/shutdown instance")
 	flags.StringArrayVarP(&cc.filters, "filter", "f", nil, "filters for mating instance name (Ex. auto-rancher-)")
 	flags.StringArrayVarP(&cc.excludes, "exclude", "e", nil, "whitelist to exclude instance name (Ex. DoNotDelete)")
 	flags.StringVarP(&cc.output, "output", "o", "remain-resources.txt", "output file if have remaning resources")
@@ -61,7 +65,9 @@ func newAwsCmd() *awsCmd {
 	flags.StringVarP(&cc.ak, "ak", "", "", "aws cloud access key (env '"+ENV_AWS_AK+"')")
 	flags.StringVarP(&cc.sk, "sk", "", "", "aws cloud secret key (env '"+ENV_AWS_SK+"')")
 	flags.StringVarP(&cc.token, "token", "", "", "aws cloud token (optional) (env '"+ENV_AWS_TK+"')")
-	flags.StringVarP(&cc.sk, "region", "r", "", "aws cloud region (env '"+ENV_AWS_REGION+"')")
+	flags.StringVarP(&cc.region, "region", "r", "", "aws cloud region (env '"+ENV_AWS_REGION+"')")
+
+	addCommands(cc.cmd, newAwsStartCmd())
 
 	return cc
 }
@@ -76,6 +82,8 @@ func (cc *awsCmd) prepareProviders() (provider.Providers, error) {
 		Filters:  cc.filters,
 		Excludes: cc.excludes,
 		Clean:    cc.clean,
+		Shutdown: cc.shutdown,
+		DryRun:   cc.dryRun,
 
 		CheckEC2: cc.checckEC2,
 		CheckEKS: cc.checkEKS,

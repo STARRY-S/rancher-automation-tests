@@ -1,0 +1,39 @@
+name: AWS Instance Shutdown
+
+on:
+  schedule:
+    # min hour day month week
+    - cron: '00 12 * * *' # Run on 20:00(UTC+8) every day
+  workflow_dispatch:
+
+env:
+  AWS_AK: ${{ secrets.AWS_AK }}
+  AWS_SK: ${{ secrets.AWS_SK }}
+  AWS_REGION: "ap-northeast-3"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.x
+      - name: Run Shutdown
+        run: |
+          set -euxo pipefail
+          ./scripts/build.sh
+          ./checker aws \
+              --filter="auto-rancher-" \
+              --filter="oetest-" \
+              --filter="auto-aws-" \
+              --filter="starry" \
+              --filter="eip" \
+              --filter="rancher" \
+              --exclude="DoNotDelete" \
+              --output="remain-resources.txt" \
+              --check-eks=false \
+              --shutdown \
+              --auto-yes

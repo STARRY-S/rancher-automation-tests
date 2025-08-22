@@ -3,7 +3,7 @@ name: Daily Check
 on:
   schedule:
     # min hour day month week
-    - cron: '30 11 * * *' # Run on 19:30(UTC+8) every day
+    - cron: '10 12 * * *' # Run on 20:10(UTC+8) every day
   workflow_dispatch:
 
 env:
@@ -38,6 +38,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.24.x
-      - name: Run Check
+      - name: Run Startup
         run: |
           scripts/ci/check.sh
