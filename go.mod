@@ -14,10 +14,10 @@ require (
 	github.com/spf13/cobra v1.10.1
 	github.com/stretchr/testify v1.10.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.1.17
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.18
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.1.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.1.18
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.1.14
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.36
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.1.31
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.1.36
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.1.32
 	golang.org/x/term v0.34.0
 )
 
