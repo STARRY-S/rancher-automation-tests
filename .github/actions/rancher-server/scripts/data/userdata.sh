@@ -2,7 +2,7 @@
 
 # UserData
 
-set -euo pipefail
+set -euxo pipefail
 cd $(dirname $0)/../../
 
 mkdir -p /var/lib/rancher/k3s/server/manifests
