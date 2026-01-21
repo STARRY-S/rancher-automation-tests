@@ -1,6 +1,6 @@
-name: Rancher Local Server Ubuntu (AWS Global)
+name: Rancher Local Server openEuler (AWS Global)
 run-name: >-
-  ${{ format('[Rancher Local Cluster Ubuntu (AWS Global)] {0}', inputs.RPM_VERSION) }}
+  ${{ format('[Rancher Local Cluster openEuler (AWS Global)] {0}', inputs.RPM_VERSION) }}
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ on:
         required: true
       RPM_LOCAL_NAME:
         description: 'Rancher local cluster name, for run multiple tests'
-        default: 'starry-custom-1'
+        default: 'starry-openeuler-test-1'
 
 env:
   # Pre-define environment variables
@@ -39,7 +39,7 @@ env:
   # AWS (Global)
   AWS_AK: ${{ secrets.AWS_AK }}
   AWS_SK: ${{ secrets.AWS_SK }}
-  AWS_REGION: "ap-northeast-3"
+  AWS_REGION: "ap-northeast-1"
 
 jobs:
   rancher-server:
@@ -68,15 +68,15 @@ jobs:
           RPM_LOCAL_NAME: ${{ env.RPM_LOCAL_NAME }}
           AUTOK3S_VERSION: "v0.9.3"
           AUTOK3S_PROVIDER: "aws"
-          AUTOK3S_SSH_USER: "ubuntu"
-          AUTOK3S_AMI: "ami-0206f4f885421736f"
-          AUTOK3S_INSTANCE_TYPE: "c5.xlarge"
-          AUTOK3S_REGION: "ap-northeast-3"
-          AUTOK3S_ZONE: "ap-northeast-3b"
-          AUTOK3S_SECURITY_GROUP: "sg-03d0841892641d808"
+          AUTOK3S_SSH_USER: "openeuler"
+          AUTOK3S_AMI: " 	ami-09a672d79568b87ba"
+          AUTOK3S_INSTANCE_TYPE: "c5a.xlarge"
+          AUTOK3S_REGION: "ap-northeast-1"
+          AUTOK3S_ZONE: "ap-northeast-1a"
+          AUTOK3S_SECURITY_GROUP: "sg-0133db5513e7a8c16"
           AUTOK3S_VOLUME_TYPE: "gp3"
-          AUTOK3S_VPC: "vpc-c2d5bcab"
-          AUTOK3S_SUBNET: "subnet-0934cc60"
+          AUTOK3S_VPC: "vpc-9ff8a7f8"
+          AUTOK3S_SUBNET: "subnet-c8071f81"
           DOCKERHUB_USERNAME: ""
           DOCKERHUB_PASSWORD: ""
           PRIME_REGISTRY_USERNAME: ${{ env.PRIME_REGISTRY_USERNAME }}
