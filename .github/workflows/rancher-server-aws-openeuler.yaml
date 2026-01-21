@@ -69,7 +69,7 @@ jobs:
           AUTOK3S_VERSION: "v0.9.3"
           AUTOK3S_PROVIDER: "aws"
           AUTOK3S_SSH_USER: "openeuler"
-          AUTOK3S_AMI: " 	ami-09a672d79568b87ba"
+          AUTOK3S_AMI: "ami-0c7c377b1f313f1a3"
           AUTOK3S_INSTANCE_TYPE: "c5a.xlarge"
           AUTOK3S_REGION: "ap-northeast-1"
           AUTOK3S_ZONE: "ap-northeast-1a"

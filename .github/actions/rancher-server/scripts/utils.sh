@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
 get_provider_args() {
     echo "Create Rancher Prime Server by provider [$AUTOK3S_PROVIDER]"
