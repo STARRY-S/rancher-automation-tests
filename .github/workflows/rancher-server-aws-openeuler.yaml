@@ -73,7 +73,7 @@ jobs:
           AUTOK3S_INSTANCE_TYPE: "c5a.xlarge"
           AUTOK3S_REGION: "ap-northeast-1"
           AUTOK3S_ZONE: "ap-northeast-1a"
-          AUTOK3S_SECURITY_GROUP: "sg-0133db5513e7a8c16"
+          AUTOK3S_SECURITY_GROUP: "sg-0959725673a3764bb"
           AUTOK3S_VOLUME_TYPE: "gp3"
           AUTOK3S_VPC: "vpc-9ff8a7f8"
           AUTOK3S_SUBNET: "subnet-c8071f81"
