@@ -16,13 +16,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Holiday window guard (auto start)
+        id: holiday_guard
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" != "schedule" ]]; then
+            echo "skip_start=false" >> "$GITHUB_OUTPUT"
+            echo "Non-schedule trigger, keep startup enabled."
+            exit 0
+          fi
+
+          today=$(TZ=Asia/Shanghai date +%Y-%m-%d)
+          holiday_start="2026-02-13"
+          holiday_end="2026-02-25"
+
+          if [[ "$today" < "$holiday_start" || "$today" > "$holiday_end" ]]; then
+            echo "skip_start=false" >> "$GITHUB_OUTPUT"
+            echo "Outside holiday window (${holiday_start} to ${holiday_end}), continue startup."
+          else
+            echo "skip_start=true" >> "$GITHUB_OUTPUT"
+            echo "Inside holiday window (${holiday_start} to ${holiday_end}), skip auto startup."
+          fi
+
+      - name: Skip auto startup during holiday window
+        if: steps.holiday_guard.outputs.skip_start == 'true'
+        run: echo "Scheduled startup is disabled from Feb 13 to Feb 25."
+
       - name: Checkout code
+        if: steps.holiday_guard.outputs.skip_start != 'true'
         uses: actions/checkout@v6
       - name: Install Go
+        if: steps.holiday_guard.outputs.skip_start != 'true'
         uses: actions/setup-go@v6
         with:
           go-version: 1.24.x
       - name: Run Check
+        if: steps.holiday_guard.outputs.skip_start != 'true'
         run: |
           set -euxo pipefail
           ./scripts/build.sh
