@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.9
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.290.0
 	github.com/aws/aws-sdk-go-v2/service/eks v1.80.0
-	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.184
+	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.187
 	github.com/sirupsen/logrus v1.9.4
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
