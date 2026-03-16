@@ -1,6 +1,6 @@
 module github.com/STARRY-S/rancher-kev2-provisioning-tests
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/STARRY-S/simple-logrus-formatter v0.0.0-20250427025245-bdb535b56165
@@ -18,7 +18,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.48
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.45
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.48
-	golang.org/x/term v0.40.0
+	golang.org/x/term v0.41.0
 )
 
 require (
@@ -47,7 +47,7 @@ require (
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	go.mongodb.org/mongo-driver v1.13.1 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
