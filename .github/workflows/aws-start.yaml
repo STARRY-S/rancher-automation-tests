@@ -3,7 +3,7 @@ name: AWS Instance Startup
 on:
   schedule:
     # min hour day month week
-    - cron: '00 0 * * *' # Run on 08:00(UTC+8) every day
+    - cron: '30 0 * * 1-5' # Run on 08:30(UTC+8) every workday
   workflow_dispatch:
 
 env:

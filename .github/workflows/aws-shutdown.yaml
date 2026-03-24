@@ -3,7 +3,7 @@ name: AWS Instance Shutdown
 on:
   schedule:
     # min hour day month week
-    - cron: '00 12 * * *' # Run on 20:00(UTC+8) every day
+    - cron: '30 11 * * *' # Run on 19:30(UTC+8) every day
   workflow_dispatch:
 
 env:
